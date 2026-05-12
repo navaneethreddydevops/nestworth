@@ -18,5 +18,6 @@ struct ContentView: View {
                     Label("History", systemImage: "clock.arrow.circlepath")
                 }
         }
+        .tint(AppTheme.accent)
     }
 }

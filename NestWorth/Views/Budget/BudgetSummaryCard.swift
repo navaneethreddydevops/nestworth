@@ -5,32 +5,65 @@ struct BudgetSummaryCard: View {
     let expenses: Double
 
     private var savings: Double { income - expenses }
+    private var savingsColor: Color { savings >= 0 ? AppTheme.income : AppTheme.expense }
+    private var savingsPct: Double { income > 0 ? min(savings / income, 1) : 0 }
 
     var body: some View {
-        HStack(spacing: 1) {
-            tile(title: "Income", amount: income, color: .green)
-            Divider().frame(height: 44)
-            tile(title: "Expenses", amount: expenses, color: .red)
-            Divider().frame(height: 44)
-            tile(title: "Saved", amount: savings, color: savings >= 0 ? .green : .red)
+        VStack(spacing: 16) {
+            HStack(spacing: 0) {
+                statTile(label: "Income", amount: income, color: AppTheme.income)
+                divider()
+                statTile(label: "Expenses", amount: expenses, color: AppTheme.expense)
+                divider()
+                statTile(label: "Saved", amount: savings, color: savingsColor)
+            }
+
+            if income > 0 {
+                VStack(spacing: 6) {
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            Capsule()
+                                .fill(Color(uiColor: .systemFill))
+                                .frame(height: 6)
+                            Capsule()
+                                .fill(savingsColor)
+                                .frame(width: max(0, geo.size.width * savingsPct), height: 6)
+                                .animation(.spring(duration: 0.5), value: savingsPct)
+                        }
+                    }
+                    .frame(height: 6)
+
+                    HStack {
+                        Text("Savings rate")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Text("\(Int(savingsPct * 100))%")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(savingsColor)
+                    }
+                }
+            }
         }
-        .padding(.vertical, 16)
-        .background(Color(uiColor: .secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.06), radius: 4, y: 2)
+        .padding(AppTheme.cardPadding)
+        .glassBackground()
     }
 
     @ViewBuilder
-    private func tile(title: String, amount: Double, color: Color) -> some View {
+    private func statTile(label: String, amount: Double, color: Color) -> some View {
         VStack(spacing: 4) {
-            Text(title)
+            Text(label)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text(CurrencyFormatter.formatCompact(amount))
-                .font(.system(.subheadline, design: .monospaced).weight(.semibold))
-                .foregroundStyle(color)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
+            AnimatedCurrencyText(amount: amount, font: .subheadline.weight(.bold), color: color, compact: true)
         }
         .frame(maxWidth: .infinity)
+    }
+
+    @ViewBuilder
+    private func divider() -> some View {
+        Rectangle()
+            .fill(Color(uiColor: .separator).opacity(0.5))
+            .frame(width: 1, height: 36)
     }
 }
