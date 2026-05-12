@@ -6,49 +6,44 @@ struct MonthYearPicker: View {
     @State private var showPicker = false
 
     var body: some View {
-        HStack(spacing: 12) {
-            Button {
-                stepMonth(by: -1)
-            } label: {
+        HStack(spacing: 0) {
+            Button { stepMonth(by: -1) } label: {
                 Image(systemName: "chevron.left")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.blue)
-                    .frame(width: 32, height: 32)
-                    .background(Color.blue.opacity(0.1), in: Circle())
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(AppTheme.accent)
+                    .frame(width: 36, height: 36)
             }
 
-            Button {
-                showPicker = true
-            } label: {
+            Button { showPicker = true } label: {
                 Text(DateHelpers.displayString(month: month, year: year))
-                    .font(.headline)
+                    .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.primary)
-                    .frame(minWidth: 140)
+                    .frame(minWidth: 130)
+                    .padding(.vertical, 8)
             }
 
-            Button {
-                stepMonth(by: 1)
-            } label: {
+            Button { stepMonth(by: 1) } label: {
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.blue)
-                    .frame(width: 32, height: 32)
-                    .background(Color.blue.opacity(0.1), in: Circle())
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(AppTheme.accent)
+                    .frame(width: 36, height: 36)
             }
         }
+        .background(.ultraThinMaterial, in: Capsule())
         .sheet(isPresented: $showPicker) {
             MonthYearPickerSheet(month: $month, year: $year)
-                .presentationDetents([.height(300)])
+                .presentationDetents([.height(280)])
+                .presentationDragIndicator(.visible)
         }
     }
 
     private func stepMonth(by delta: Int) {
         var m = month + delta
         var y = year
-        if m < 1 { m = 12; y -= 1 }
-        if m > 12 { m = 1; y += 1 }
+        if m < 1  { m = 12; y -= 1 }
+        if m > 12 { m = 1;  y += 1 }
         month = m
-        year = y
+        year  = y
     }
 }
 
@@ -60,10 +55,16 @@ private struct MonthYearPickerSheet: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
+                Text("Select Period")
+                    .font(.headline)
                 Spacer()
                 Button("Done") { dismiss() }
-                    .padding()
+                    .fontWeight(.semibold)
+                    .foregroundStyle(AppTheme.accent)
             }
+            .padding()
+
+            Divider()
 
             HStack {
                 Picker("Month", selection: $month) {
