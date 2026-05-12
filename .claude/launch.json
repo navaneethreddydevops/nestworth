@@ -1,0 +1,71 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "XcodeGen — Generate Project",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "xcodegen generate && echo '✅ Project generated. Watching for changes...' && tail -f /dev/null"],
+      "port": 0
+    },
+    {
+      "name": "iOS Simulator — iPhone 17",
+      "runtimeExecutable": "xcodebuild",
+      "runtimeArgs": [
+        "-project", "NestWorth.xcodeproj",
+        "-scheme", "NestWorth",
+        "-destination", "platform=iOS Simulator,id=83E7ECBA-3E6A-4B83-AD5E-7E882112EFE0",
+        "-configuration", "Debug",
+        "build-for-testing"
+      ],
+      "port": 0
+    },
+    {
+      "name": "iOS Simulator — iPhone 17 Pro",
+      "runtimeExecutable": "xcodebuild",
+      "runtimeArgs": [
+        "-project", "NestWorth.xcodeproj",
+        "-scheme", "NestWorth",
+        "-destination", "platform=iOS Simulator,id=D1722B8C-7864-43C4-A94A-BA639A0926D8",
+        "-configuration", "Debug",
+        "build-for-testing"
+      ],
+      "port": 0
+    },
+    {
+      "name": "iOS Simulator — iPhone 17 Pro Max",
+      "runtimeExecutable": "xcodebuild",
+      "runtimeArgs": [
+        "-project", "NestWorth.xcodeproj",
+        "-scheme", "NestWorth",
+        "-destination", "platform=iOS Simulator,id=E8BE8584-844E-4BB4-A8F8-0B38CDAF6E79",
+        "-configuration", "Debug",
+        "build-for-testing"
+      ],
+      "port": 0
+    },
+    {
+      "name": "iOS Simulator — iPhone 17e",
+      "runtimeExecutable": "xcodebuild",
+      "runtimeArgs": [
+        "-project", "NestWorth.xcodeproj",
+        "-scheme", "NestWorth",
+        "-destination", "platform=iOS Simulator,id=AEDB7EB8-9092-44C7-9B93-DC9C5F563A5A",
+        "-configuration", "Debug",
+        "build-for-testing"
+      ],
+      "port": 0
+    },
+    {
+      "name": "iOS Simulator — iPhone Air",
+      "runtimeExecutable": "xcodebuild",
+      "runtimeArgs": [
+        "-project", "NestWorth.xcodeproj",
+        "-scheme", "NestWorth",
+        "-destination", "platform=iOS Simulator,id=7E716846-53D6-44AD-A71F-D6A90415F895",
+        "-configuration", "Debug",
+        "build-for-testing"
+      ],
+      "port": 0
+    }
+  ]
+}
