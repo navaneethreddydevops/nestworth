@@ -1,0 +1,473 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01C97BBFF27651C203699259 /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851A8972E59C29AF24E442FE /* Asset.swift */; };
+		1CFC24CBEAF8BEA38C05695F /* LiabilityType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B78C55B328995C36D3575614 /* LiabilityType.swift */; };
+		22FAA43D3CC72A6DA79D630F /* ExpenseCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EC4EFD8A27FEBCCC647F4F /* ExpenseCategory.swift */; };
+		3442BA68E5CA79C0D7AB9B10 /* NestWorthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E98D73771D971573EBA9C7C /* NestWorthApp.swift */; };
+		3BD121B0CE2E225F6594CFE9 /* AddExpenseSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E170B9FBB7E4AD322E9871 /* AddExpenseSheet.swift */; };
+		4C518CE20F3C8B2F18D063BA /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04A7B2C6FB731B8BEB5FA2 /* EmptyStateView.swift */; };
+		5011BFC0CBBE6E0FF8CFAA33 /* NetWorthSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A89961C27E60416667C870B /* NetWorthSnapshot.swift */; };
+		5D2F30BEF8DB1DB289C05978 /* DateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425EB14BB236616BC95641D4 /* DateHelpers.swift */; };
+		663C946E1538DCAE571A36B3 /* IncomeEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A15992ECFAEC4ACB9CF769A8 /* IncomeEntry.swift */; };
+		6F0FC900D746BA4909048B3F /* SnapshotRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D400278359134414F245FC59 /* SnapshotRowView.swift */; };
+		723F1143933E497B7A0C929F /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6BAF1BA559FF13642B261C5 /* CurrencyFormatter.swift */; };
+		7796965115C4ECBD709B1061 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4ED51D820617D06ABDAB0F /* ContentView.swift */; };
+		82C667598571AA4738EAB360 /* AssetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B63CCE65BD53C8448C9741D /* AssetType.swift */; };
+		875DE2D899EF245135AED92E /* BudgetTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACDF1059B87B7A45A32CB79 /* BudgetTabView.swift */; };
+		8DF4E045FA78167900336F28 /* HistoryTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA382D65F12D43A1622C95F8 /* HistoryTabView.swift */; };
+		A1399456F5F39C443540891F /* BudgetSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909E6CB0E1CBF578109D01B9 /* BudgetSummaryCard.swift */; };
+		B21D55F9F5D0298EAE667DCC /* NetWorthTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EF231B5003DD2ABD9CD96D /* NetWorthTabView.swift */; };
+		B33A35DAD37D3E85EDF9D5A8 /* MonthYearPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0F87FD5AC9B93C97FDE3396 /* MonthYearPicker.swift */; };
+		C383887246FB44A9A520CA43 /* AddIncomeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929CB2F9BDB700D1468F99A1 /* AddIncomeSheet.swift */; };
+		CBCF643BB26532C7C49F52CC /* AddLiabilitySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569DD6502E3882CB3F65553D /* AddLiabilitySheet.swift */; };
+		CD7AACA025322CB7D3B6E9C8 /* AddAssetSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F6436E3B202DF0FE8086B0 /* AddAssetSheet.swift */; };
+		D499B82105CBDC2B3872E8C2 /* IncomeSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8E67C2FA254723076D0666 /* IncomeSource.swift */; };
+		DB3E4340D4896025DC49C2F1 /* NetWorthSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B87EDD5AC9510110C01279F /* NetWorthSummaryCard.swift */; };
+		E7A37A918C986F069DD578A6 /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CE83CBF2884BB8C9E635F0 /* CurrencyTextField.swift */; };
+		EF042B2D6EC89B5E5D48B7F2 /* ExpenseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADC9D469DB8E3C34FF7E701 /* ExpenseEntry.swift */; };
+		EF27EC2F7524D50309EC9792 /* Liability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74575CF16E6FE08E0AD42D01 /* Liability.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0ADC9D469DB8E3C34FF7E701 /* ExpenseEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEntry.swift; sourceTree = "<group>"; };
+		0E98D73771D971573EBA9C7C /* NestWorthApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestWorthApp.swift; sourceTree = "<group>"; };
+		22EC4EFD8A27FEBCCC647F4F /* ExpenseCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseCategory.swift; sourceTree = "<group>"; };
+		2F4ED51D820617D06ABDAB0F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		425EB14BB236616BC95641D4 /* DateHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelpers.swift; sourceTree = "<group>"; };
+		4B87EDD5AC9510110C01279F /* NetWorthSummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthSummaryCard.swift; sourceTree = "<group>"; };
+		4F5DF56AC8FF6F391B19534C /* NestWorth.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NestWorth.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		569DD6502E3882CB3F65553D /* AddLiabilitySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLiabilitySheet.swift; sourceTree = "<group>"; };
+		74575CF16E6FE08E0AD42D01 /* Liability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Liability.swift; sourceTree = "<group>"; };
+		7B04A7B2C6FB731B8BEB5FA2 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		7C8E67C2FA254723076D0666 /* IncomeSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeSource.swift; sourceTree = "<group>"; };
+		851A8972E59C29AF24E442FE /* Asset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Asset.swift; sourceTree = "<group>"; };
+		8A89961C27E60416667C870B /* NetWorthSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthSnapshot.swift; sourceTree = "<group>"; };
+		909E6CB0E1CBF578109D01B9 /* BudgetSummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetSummaryCard.swift; sourceTree = "<group>"; };
+		929CB2F9BDB700D1468F99A1 /* AddIncomeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddIncomeSheet.swift; sourceTree = "<group>"; };
+		92EF231B5003DD2ABD9CD96D /* NetWorthTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorthTabView.swift; sourceTree = "<group>"; };
+		92F6436E3B202DF0FE8086B0 /* AddAssetSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetSheet.swift; sourceTree = "<group>"; };
+		9ACDF1059B87B7A45A32CB79 /* BudgetTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetTabView.swift; sourceTree = "<group>"; };
+		9B63CCE65BD53C8448C9741D /* AssetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetType.swift; sourceTree = "<group>"; };
+		A15992ECFAEC4ACB9CF769A8 /* IncomeEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeEntry.swift; sourceTree = "<group>"; };
+		A6BAF1BA559FF13642B261C5 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
+		B0F87FD5AC9B93C97FDE3396 /* MonthYearPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthYearPicker.swift; sourceTree = "<group>"; };
+		B1CE83CBF2884BB8C9E635F0 /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
+		B78C55B328995C36D3575614 /* LiabilityType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityType.swift; sourceTree = "<group>"; };
+		D400278359134414F245FC59 /* SnapshotRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotRowView.swift; sourceTree = "<group>"; };
+		E1E170B9FBB7E4AD322E9871 /* AddExpenseSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseSheet.swift; sourceTree = "<group>"; };
+		FA382D65F12D43A1622C95F8 /* HistoryTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTabView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		132549F361EF361DF31519C5 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				9B63CCE65BD53C8448C9741D /* AssetType.swift */,
+				22EC4EFD8A27FEBCCC647F4F /* ExpenseCategory.swift */,
+				7C8E67C2FA254723076D0666 /* IncomeSource.swift */,
+				B78C55B328995C36D3575614 /* LiabilityType.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
+		498A507A335A83C0C6C9EF08 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				851A8972E59C29AF24E442FE /* Asset.swift */,
+				0ADC9D469DB8E3C34FF7E701 /* ExpenseEntry.swift */,
+				A15992ECFAEC4ACB9CF769A8 /* IncomeEntry.swift */,
+				74575CF16E6FE08E0AD42D01 /* Liability.swift */,
+				8A89961C27E60416667C870B /* NetWorthSnapshot.swift */,
+				132549F361EF361DF31519C5 /* Enums */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		55B07C5086A09B28B432A472 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				2F4ED51D820617D06ABDAB0F /* ContentView.swift */,
+				0E98D73771D971573EBA9C7C /* NestWorthApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		62D4FCBE1D8BF97751FF1C50 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A6BAF1BA559FF13642B261C5 /* CurrencyFormatter.swift */,
+				425EB14BB236616BC95641D4 /* DateHelpers.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		774348F2870A3152FAB392B1 = {
+			isa = PBXGroup;
+			children = (
+				9682DF26ABA04B00157AF7D5 /* NestWorth */,
+				BF794DCD11C939B6B03C58B2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9682DF26ABA04B00157AF7D5 /* NestWorth */ = {
+			isa = PBXGroup;
+			children = (
+				55B07C5086A09B28B432A472 /* App */,
+				498A507A335A83C0C6C9EF08 /* Models */,
+				62D4FCBE1D8BF97751FF1C50 /* Utilities */,
+				CF02020F67463416D2A35D8F /* Views */,
+			);
+			path = NestWorth;
+			sourceTree = "<group>";
+		};
+		9794CC042F6047C6FD4B33FB /* Budget */ = {
+			isa = PBXGroup;
+			children = (
+				E1E170B9FBB7E4AD322E9871 /* AddExpenseSheet.swift */,
+				929CB2F9BDB700D1468F99A1 /* AddIncomeSheet.swift */,
+				909E6CB0E1CBF578109D01B9 /* BudgetSummaryCard.swift */,
+				9ACDF1059B87B7A45A32CB79 /* BudgetTabView.swift */,
+			);
+			path = Budget;
+			sourceTree = "<group>";
+		};
+		B88FFE179F3FD1068EADA619 /* History */ = {
+			isa = PBXGroup;
+			children = (
+				FA382D65F12D43A1622C95F8 /* HistoryTabView.swift */,
+				D400278359134414F245FC59 /* SnapshotRowView.swift */,
+			);
+			path = History;
+			sourceTree = "<group>";
+		};
+		BF794DCD11C939B6B03C58B2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4F5DF56AC8FF6F391B19534C /* NestWorth.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C31C957A188EE2F855A2AB69 /* NetWorth */ = {
+			isa = PBXGroup;
+			children = (
+				92F6436E3B202DF0FE8086B0 /* AddAssetSheet.swift */,
+				569DD6502E3882CB3F65553D /* AddLiabilitySheet.swift */,
+				4B87EDD5AC9510110C01279F /* NetWorthSummaryCard.swift */,
+				92EF231B5003DD2ABD9CD96D /* NetWorthTabView.swift */,
+			);
+			path = NetWorth;
+			sourceTree = "<group>";
+		};
+		CF02020F67463416D2A35D8F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9794CC042F6047C6FD4B33FB /* Budget */,
+				B88FFE179F3FD1068EADA619 /* History */,
+				C31C957A188EE2F855A2AB69 /* NetWorth */,
+				F20CBE9F221694D7A166ACD0 /* Shared */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F20CBE9F221694D7A166ACD0 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B1CE83CBF2884BB8C9E635F0 /* CurrencyTextField.swift */,
+				7B04A7B2C6FB731B8BEB5FA2 /* EmptyStateView.swift */,
+				B0F87FD5AC9B93C97FDE3396 /* MonthYearPicker.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		17E7D161272F12771E677FE4 /* NestWorth */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 60D4458C1A049612C70E517D /* Build configuration list for PBXNativeTarget "NestWorth" */;
+			buildPhases = (
+				C49F82A3C63C3FA8B948F74A /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NestWorth;
+			packageProductDependencies = (
+			);
+			productName = NestWorth;
+			productReference = 4F5DF56AC8FF6F391B19534C /* NestWorth.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C3AB50BFE78CDA7B84CED9CE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					17E7D161272F12771E677FE4 = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 22347104A88FA4742A1938C7 /* Build configuration list for PBXProject "NestWorth" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 774348F2870A3152FAB392B1;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = BF794DCD11C939B6B03C58B2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				17E7D161272F12771E677FE4 /* NestWorth */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C49F82A3C63C3FA8B948F74A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD7AACA025322CB7D3B6E9C8 /* AddAssetSheet.swift in Sources */,
+				3BD121B0CE2E225F6594CFE9 /* AddExpenseSheet.swift in Sources */,
+				C383887246FB44A9A520CA43 /* AddIncomeSheet.swift in Sources */,
+				CBCF643BB26532C7C49F52CC /* AddLiabilitySheet.swift in Sources */,
+				01C97BBFF27651C203699259 /* Asset.swift in Sources */,
+				82C667598571AA4738EAB360 /* AssetType.swift in Sources */,
+				A1399456F5F39C443540891F /* BudgetSummaryCard.swift in Sources */,
+				875DE2D899EF245135AED92E /* BudgetTabView.swift in Sources */,
+				7796965115C4ECBD709B1061 /* ContentView.swift in Sources */,
+				723F1143933E497B7A0C929F /* CurrencyFormatter.swift in Sources */,
+				E7A37A918C986F069DD578A6 /* CurrencyTextField.swift in Sources */,
+				5D2F30BEF8DB1DB289C05978 /* DateHelpers.swift in Sources */,
+				4C518CE20F3C8B2F18D063BA /* EmptyStateView.swift in Sources */,
+				22FAA43D3CC72A6DA79D630F /* ExpenseCategory.swift in Sources */,
+				EF042B2D6EC89B5E5D48B7F2 /* ExpenseEntry.swift in Sources */,
+				8DF4E045FA78167900336F28 /* HistoryTabView.swift in Sources */,
+				663C946E1538DCAE571A36B3 /* IncomeEntry.swift in Sources */,
+				D499B82105CBDC2B3872E8C2 /* IncomeSource.swift in Sources */,
+				EF27EC2F7524D50309EC9792 /* Liability.swift in Sources */,
+				1CFC24CBEAF8BEA38C05695F /* LiabilityType.swift in Sources */,
+				B33A35DAD37D3E85EDF9D5A8 /* MonthYearPicker.swift in Sources */,
+				3442BA68E5CA79C0D7AB9B10 /* NestWorthApp.swift in Sources */,
+				5011BFC0CBBE6E0FF8CFAA33 /* NetWorthSnapshot.swift in Sources */,
+				DB3E4340D4896025DC49C2F1 /* NetWorthSummaryCard.swift in Sources */,
+				B21D55F9F5D0298EAE667DCC /* NetWorthTabView.swift in Sources */,
+				6F0FC900D746BA4909048B3F /* SnapshotRowView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		00E6A745CC6C09662E1F571F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = NestWorth;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = NestWorth;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3435EAB409F504EA116CF81D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = NestWorth;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = NestWorth;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		35E295DB99674C9E8B742E2D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nestworth.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		D21055BC9DB3E4179602806D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nestworth.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		22347104A88FA4742A1938C7 /* Build configuration list for PBXProject "NestWorth" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35E295DB99674C9E8B742E2D /* Debug */,
+				D21055BC9DB3E4179602806D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		60D4458C1A049612C70E517D /* Build configuration list for PBXNativeTarget "NestWorth" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00E6A745CC6C09662E1F571F /* Debug */,
+				3435EAB409F504EA116CF81D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C3AB50BFE78CDA7B84CED9CE /* Project object */;
+}
