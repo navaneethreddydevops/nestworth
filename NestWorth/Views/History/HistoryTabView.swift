@@ -141,11 +141,28 @@ struct HistoryTabView: View {
     // MARK: - Stats grid (3 columns)
     private var statsGrid: some View {
         let avg = snapshots.count > 0 ? yoyGain / Double(snapshots.count) : 0
+        let bestGainInfo = bestMonthGain()
         return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-            MiniStatWidget(icon: "chart.line.uptrend.xyaxis", label: "12mo Gain",    value: CurrencyFormatter.formatCompact(yoyGain), accentColor: AppTheme.mint)
-            MiniStatWidget(icon: "arrow.up.right",            label: "Snapshots",    value: "\(snapshots.count)",                     accentColor: AppTheme.violet)
-            MiniStatWidget(icon: "chart.bar",                 label: "Avg / snap",   value: CurrencyFormatter.formatCompact(avg),     accentColor: AppTheme.cyan)
+            MiniStatWidget(icon: "chart.line.uptrend.xyaxis", label: "Gain",  value: (yoyGain >= 0 ? "+" : "") + CurrencyFormatter.formatCompact(yoyGain), sub: "12 months",         accentColor: AppTheme.mint)
+            MiniStatWidget(icon: "arrow.up.right",            label: "Best",  value: (bestGainInfo.gain >= 0 ? "+" : "") + CurrencyFormatter.formatCompact(bestGainInfo.gain),        sub: bestGainInfo.label, accentColor: AppTheme.violet)
+            MiniStatWidget(icon: "chart.bar",                 label: "Avg",   value: (avg >= 0 ? "+" : "") + CurrencyFormatter.formatCompact(avg),          sub: "monthly",           accentColor: AppTheme.cyan)
         }
+    }
+
+    private func bestMonthGain() -> (gain: Double, label: String) {
+        let ordered = sorted
+        guard ordered.count >= 2 else { return (0, "—") }
+        var best: (gain: Double, label: String) = (0, "—")
+        for i in 1..<ordered.count {
+            let gain = ordered[i].netWorth - ordered[i - 1].netWorth
+            if gain > best.gain {
+                let month = Calendar.current.component(.month, from: ordered[i].snapshotDate)
+                let year  = Calendar.current.component(.year,  from: ordered[i].snapshotDate)
+                let label = DateHelpers.shortDisplayString(month: month, year: year)
+                best = (gain, label)
+            }
+        }
+        return best
     }
 
     // MARK: - Timeline
