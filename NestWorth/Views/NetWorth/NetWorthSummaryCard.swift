@@ -6,7 +6,7 @@ struct NetWorthSummaryCard: View {
     let previousNetWorth: Double?
 
     private var netWorth: Double { totalAssets - totalLiabilities }
-    private var netWorthColor: Color { netWorth >= 0 ? AppTheme.income : AppTheme.expense }
+    private var equityRatio: Double { totalAssets > 0 ? max(0, min(netWorth / totalAssets, 1)) : 0 }
     private var delta: Double? {
         guard let prev = previousNetWorth else { return nil }
         return netWorth - prev
@@ -15,36 +15,61 @@ struct NetWorthSummaryCard: View {
     var body: some View {
         VStack(spacing: 0) {
             // Gradient header
-            VStack(spacing: 8) {
-                Text("Net Worth")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.white.opacity(0.8))
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Net Worth")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.white.opacity(0.75))
 
-                AnimatedCurrencyText(
-                    amount: netWorth,
-                    font: .system(size: 40, weight: .bold),
-                    color: .white
+                    AnimatedCurrencyText(
+                        amount: netWorth,
+                        font: .system(size: 38, weight: .bold, design: .rounded),
+                        color: .white
+                    )
+
+                    if let delta {
+                        deltaLabel(delta)
+                    }
+                }
+                Spacer()
+                CircularProgressRing(
+                    progress: equityRatio,
+                    gradient: LinearGradient(
+                        colors: [.white.opacity(0.9), .white.opacity(0.5)],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 7,
+                    size: 66,
+                    label: "\(Int(equityRatio * 100))%",
+                    sublabel: "equity"
                 )
+            }
+            .padding(.horizontal, AppTheme.cardPadding)
+            .padding(.top, 20)
+            .padding(.bottom, 18)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(netWorth >= 0 ? AppTheme.netWorthGradient : AppTheme.expenseGradient)
 
-                if let delta {
-                    deltaLabel(delta)
+            // Stacked asset/liability bar
+            GeometryReader { geo in
+                let assetW = totalAssets + totalLiabilities > 0
+                    ? geo.size.width * CGFloat(totalAssets / (totalAssets + totalLiabilities))
+                    : geo.size.width * 0.5
+                HStack(spacing: 0) {
+                    Rectangle().fill(AppTheme.income).frame(width: assetW, height: 4)
+                    Rectangle().fill(AppTheme.expense).frame(maxWidth: .infinity, maxHeight: 4)
                 }
             }
-            .padding(.top, 24)
-            .padding(.bottom, 20)
-            .frame(maxWidth: .infinity)
-            .background(netWorth >= 0 ? AppTheme.netWorthGradient : LinearGradient(
-                colors: [AppTheme.expense.opacity(0.9), AppTheme.expense],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            ))
+            .frame(height: 4)
+            .background(AppTheme.surface)
 
-            // Asset / Liability strip
+            // Stat strip
             HStack(spacing: 0) {
-                statStrip(label: "Assets", amount: totalAssets, color: AppTheme.income)
+                statStrip(label: "Assets", amount: totalAssets, color: AppTheme.income, icon: "building.columns.fill")
                 Rectangle()
                     .fill(Color(uiColor: .separator).opacity(0.3))
-                    .frame(width: 1, height: 40)
-                statStrip(label: "Liabilities", amount: totalLiabilities, color: AppTheme.expense)
+                    .frame(width: 1, height: 44)
+                statStrip(label: "Liabilities", amount: totalLiabilities, color: AppTheme.expense, icon: "creditcard.fill")
             }
             .padding(.vertical, 14)
             .background(AppTheme.surface)
@@ -54,12 +79,17 @@ struct NetWorthSummaryCard: View {
     }
 
     @ViewBuilder
-    private func statStrip(label: String, amount: Double, color: Color) -> some View {
-        VStack(spacing: 3) {
-            Text(label)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            AnimatedCurrencyText(amount: amount, font: .subheadline.weight(.semibold), color: color, compact: true)
+    private func statStrip(label: String, amount: Double, color: Color, icon: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(color.opacity(0.7))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(label)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                AnimatedCurrencyText(amount: amount, font: .subheadline.weight(.semibold), color: color, compact: true)
+            }
         }
         .frame(maxWidth: .infinity)
     }
@@ -69,15 +99,10 @@ struct NetWorthSummaryCard: View {
         let isPositive = delta >= 0
         let color: Color = delta == 0 ? .white.opacity(0.6) : (isPositive ? Color(red: 0.6, green: 1, blue: 0.75) : Color(red: 1, green: 0.6, blue: 0.6))
         let icon = delta == 0 ? "minus" : (isPositive ? "arrow.up.right" : "arrow.down.right")
-
         HStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.caption2.weight(.bold))
-            Text(CurrencyFormatter.formatCompact(abs(delta)))
-                .font(.caption.weight(.semibold))
-                .fontDesign(.monospaced)
-            Text("from last snapshot")
-                .font(.caption)
+            Image(systemName: icon).font(.caption2.weight(.bold))
+            Text(CurrencyFormatter.formatCompact(abs(delta))).font(.caption.weight(.semibold)).fontDesign(.monospaced)
+            Text("from last snapshot").font(.caption)
         }
         .foregroundStyle(color)
         .padding(.horizontal, 10)
