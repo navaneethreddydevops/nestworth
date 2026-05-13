@@ -15,9 +15,6 @@ jobs:
     name: Build & Package
     runs-on: macos-14
 
-    env:
-      ARCHIVE_PATH: ${{ runner.temp }}/NestWorth.xcarchive
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,24 +36,26 @@ jobs:
 
       - name: Build (Debug, Simulator)
         run: |
+          set -o pipefail
           xcodebuild \
             -project NestWorth.xcodeproj \
             -scheme NestWorth \
             -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
-            build | xcpretty --color && exit "${PIPESTATUS[0]}"
+            build | xcpretty --color
 
       - name: Archive (Release)
         run: |
+          set -o pipefail
           xcodebuild \
             -project NestWorth.xcodeproj \
             -scheme NestWorth \
             -destination 'generic/platform=iOS Simulator' \
             -configuration Release \
-            -archivePath "$ARCHIVE_PATH" \
+            -archivePath "$RUNNER_TEMP/NestWorth.xcarchive" \
             CODE_SIGNING_ALLOWED=NO \
-            archive | xcpretty --color && exit "${PIPESTATUS[0]}"
+            archive | xcpretty --color
 
       - name: Upload archive artifact
         uses: actions/upload-artifact@v4
