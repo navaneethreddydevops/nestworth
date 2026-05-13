@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & Package
+    runs-on: macos-14
+
+    env:
+      ARCHIVE_PATH: ${{ runner.temp }}/NestWorth.xcarchive
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 15
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Resolve Swift packages
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project NestWorth.xcodeproj \
+            -scheme NestWorth
+
+      - name: Build (Debug, Simulator)
+        run: |
+          xcodebuild \
+            -project NestWorth.xcodeproj \
+            -scheme NestWorth \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcpretty --color && exit "${PIPESTATUS[0]}"
+
+      - name: Archive (Release)
+        run: |
+          xcodebuild \
+            -project NestWorth.xcodeproj \
+            -scheme NestWorth \
+            -destination 'generic/platform=iOS Simulator' \
+            -configuration Release \
+            -archivePath "$ARCHIVE_PATH" \
+            CODE_SIGNING_ALLOWED=NO \
+            archive | xcpretty --color && exit "${PIPESTATUS[0]}"
+
+      - name: Upload archive artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NestWorth-archive
+          path: ${{ runner.temp }}/NestWorth.xcarchive
+          retention-days: 7
