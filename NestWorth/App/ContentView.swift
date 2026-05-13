@@ -3,6 +3,11 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView {
+            DashboardTabView()
+                .tabItem {
+                    Label("Overview", systemImage: "square.grid.2x2.fill")
+                }
+
             BudgetTabView()
                 .tabItem {
                     Label("Budget", systemImage: "dollarsign.circle.fill")
