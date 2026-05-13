@@ -1,34 +1,36 @@
-# NestWorth — Claude Code Guide
+# CLAUDE.md
 
-## Project
-iOS 17+ SwiftUI app for personal finance: net worth tracking and budget management.
-Built with SwiftData for persistence, Swift Charts for visualisation, XcodeGen for project generation.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Key commands
+## Build & Run
+
+This project uses **XcodeGen** (`project.yml`) to generate the `.xcodeproj`. If you modify `project.yml`, regenerate the project:
 
 ```bash
-# Regenerate .xcodeproj after editing project.yml
 xcodegen generate
-
-# Run tests from CLI (requires Xcode command-line tools)
-xcodebuild test -scheme NestWorth -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
 
+Build from the command line (requires Xcode):
+
+```bash
+xcodebuild -project NestWorth.xcodeproj -scheme NestWorth -destination 'platform=iOS Simulator,name=iPhone 15' build
+```
+
+No test target currently exists — run and test via Xcode Simulator.
+
 ## Architecture
-- `NestWorth/Models/` — SwiftData `@Model` classes (Asset, Liability, IncomeEntry, ExpenseEntry, NetWorthSnapshot)
-- `NestWorth/Models/Enums/` — enums for types/categories (all `Codable + CaseIterable`)
-- `NestWorth/ViewModels/` — `@Observable` view models containing business logic (BudgetViewModel, NetWorthViewModel)
-- `NestWorth/Views/` — SwiftUI views grouped by feature (Budget, NetWorth, History, Charts, Shared)
-- `NestWorth/DesignSystem/` — AppTheme tokens and enum theme extensions
-- `NestWorth/Utilities/` — pure-function helpers (CurrencyFormatter, DateHelpers)
-- `NestWorthTests/` — Swift Testing framework unit tests
 
-## Conventions
-- Use `@Observable` (not `ObservableObject`) — deployment target is iOS 17
-- ViewModels receive model arrays as parameters; they do not hold SwiftData queries directly
-- `NetWorthSnapshot.netWorth` is a computed property — never store it separately
-- Tests use `ModelConfiguration(isStoredInMemoryOnly: true)` for SwiftData tests
-- Use Swift Testing (`import Testing`, `#expect`, `@Test`) not XCTest
+**SwiftUI + SwiftData**, iOS 17+ only. No third-party dependencies.
 
-## project.yml
-XcodeGen spec at repo root. Always run `xcodegen generate` after modifying it.
+- **`App/`** — Entry point. `NestWorthApp` sets up the `ModelContainer` for all five SwiftData models. `ContentView` is a 3-tab shell (Budget, Net Worth, History).
+- **`Models/`** — SwiftData `@Model` classes: `Asset`, `Liability`, `IncomeEntry`, `ExpenseEntry`, `NetWorthSnapshot`. Enums live in `Models/Enums/`.
+- **`Views/`** — Organized by tab: `Budget/`, `NetWorth/`, `History/`. `Shared/` holds reusable components (`GlassCard`, `CurrencyTextField`, `AnimatedCurrencyText`, `EmptyStateView`, `MonthYearPicker`). `Charts/` holds Swift Charts wrappers.
+- **`DesignSystem/`** — `AppTheme` is the single source of truth for colors, gradients, corner radii, spacing, and view modifier extensions (`.glassBackground()`, `.surfaceBackground()`).
+- **`Utilities/`** — `CurrencyFormatter` and `DateHelpers`.
+
+## Key Conventions
+
+- All colors and layout constants come from `AppTheme` — never use hardcoded colors or magic numbers.
+- `AppTheme.assetColors` maps to `AssetType` cases in order; keep them in sync when adding asset types.
+- SwiftData models are injected via the environment — views query with `@Query` and mutate via `modelContext`.
+- The project targets iOS 17 and Swift 5.9; use only APIs available on that baseline.

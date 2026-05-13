@@ -6,64 +6,97 @@ struct BudgetSummaryCard: View {
 
     private var savings: Double { income - expenses }
     private var savingsColor: Color { savings >= 0 ? AppTheme.income : AppTheme.expense }
-    private var savingsPct: Double { income > 0 ? min(savings / income, 1) : 0 }
+    private var savingsPct: Double { income > 0 ? max(0, min(savings / income, 1)) : 0 }
+    private var spendPct: Double { income > 0 ? min(expenses / income, 1) : 0 }
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
+            // Gradient header strip
             HStack(spacing: 0) {
-                statTile(label: "Income", amount: income, color: AppTheme.income)
-                divider()
-                statTile(label: "Expenses", amount: expenses, color: AppTheme.expense)
-                divider()
-                statTile(label: "Saved", amount: savings, color: savingsColor)
+                gradientStatTile(
+                    label: "Income",
+                    amount: income,
+                    gradient: AppTheme.incomeGradient,
+                    icon: "arrow.down.circle.fill"
+                )
+                Rectangle()
+                    .fill(.white.opacity(0.2))
+                    .frame(width: 1, height: 48)
+                gradientStatTile(
+                    label: "Expenses",
+                    amount: expenses,
+                    gradient: AppTheme.expenseGradient,
+                    icon: "arrow.up.circle.fill"
+                )
+                Rectangle()
+                    .fill(.white.opacity(0.2))
+                    .frame(width: 1, height: 48)
+                gradientStatTile(
+                    label: "Saved",
+                    amount: savings,
+                    gradient: savings >= 0 ? AppTheme.incomeGradient : AppTheme.expenseGradient,
+                    icon: savings >= 0 ? "checkmark.circle.fill" : "exclamationmark.circle.fill"
+                )
             }
+            .padding(.vertical, 16)
+            .background(AppTheme.netWorthGradient)
 
-            if income > 0 {
-                VStack(spacing: 6) {
+            // Progress section
+            VStack(spacing: 10) {
+                if income > 0 {
+                    // Segmented spend bar
                     GeometryReader { geo in
                         ZStack(alignment: .leading) {
-                            Capsule()
-                                .fill(Color(uiColor: .systemFill))
-                                .frame(height: 6)
-                            Capsule()
-                                .fill(savingsColor)
-                                .frame(width: max(0, geo.size.width * savingsPct), height: 6)
-                                .animation(.spring(duration: 0.5), value: savingsPct)
+                            RoundedRectangle(cornerRadius: 5).fill(Color(uiColor: .systemFill)).frame(height: 10)
+                            HStack(spacing: 2) {
+                                RoundedRectangle(cornerRadius: 5)
+                                    .fill(AppTheme.expenseGradient)
+                                    .frame(width: max(0, geo.size.width * CGFloat(spendPct)), height: 10)
+                                    .animation(.spring(duration: 0.6), value: spendPct)
+                                Spacer(minLength: 0)
+                            }
                         }
                     }
-                    .frame(height: 6)
+                    .frame(height: 10)
 
                     HStack {
-                        Text("Savings rate")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        HStack(spacing: 4) {
+                            Circle().fill(AppTheme.expense).frame(width: 7, height: 7)
+                            Text("Spent \(Int(spendPct * 100))%")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                         Spacer()
-                        Text("\(Int(savingsPct * 100))%")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(savingsColor)
+                        HStack(spacing: 4) {
+                            Circle().fill(AppTheme.income).frame(width: 7, height: 7)
+                            Text("Saved \(Int(savingsPct * 100))%")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(savingsColor)
+                        }
                     }
                 }
             }
+            .padding(.horizontal, AppTheme.cardPadding)
+            .padding(.vertical, 12)
+            .background(AppTheme.surface)
         }
-        .padding(AppTheme.cardPadding)
-        .glassBackground()
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardCornerRadius))
+        .shadow(color: .black.opacity(0.12), radius: 14, y: 6)
     }
 
     @ViewBuilder
-    private func statTile(label: String, amount: Double, color: Color) -> some View {
-        VStack(spacing: 4) {
+    private func gradientStatTile(label: String, amount: Double, gradient: LinearGradient, icon: String) -> some View {
+        VStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(.white.opacity(0.8))
+            AnimatedCurrencyText(amount: amount, font: .system(size: 15, weight: .bold, design: .rounded), color: .white, compact: true)
             Text(label)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            AnimatedCurrencyText(amount: amount, font: .subheadline.weight(.bold), color: color, compact: true)
+                .font(.caption2.weight(.medium))
+                .foregroundStyle(.white.opacity(0.75))
+                .textCase(.uppercase)
+                .tracking(0.3)
         }
         .frame(maxWidth: .infinity)
-    }
-
-    @ViewBuilder
-    private func divider() -> some View {
-        Rectangle()
-            .fill(Color(uiColor: .separator).opacity(0.5))
-            .frame(width: 1, height: 36)
     }
 }

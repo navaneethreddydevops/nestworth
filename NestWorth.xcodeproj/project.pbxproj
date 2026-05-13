@@ -50,6 +50,9 @@
 		ED2EDD09E96872252FB99E57 /* NetWorthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAB12BB9A6079AB231E5D10 /* NetWorthViewModel.swift */; };
 		EF042B2D6EC89B5E5D48B7F2 /* ExpenseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADC9D469DB8E3C34FF7E701 /* ExpenseEntry.swift */; };
 		EF27EC2F7524D50309EC9792 /* Liability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74575CF16E6FE08E0AD42D01 /* Liability.swift */; };
+		AA11BB22CC33DD44EE55FF66 /* DashboardTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB22CC33DD44EE55AA00 /* DashboardTabView.swift */; };
+		BB11CC22DD33EE44FF5566AA /* CircularProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB11CC22DD33EE44FF556600 /* CircularProgressRing.swift */; };
+		CC11DD22EE33FF4400556677 /* MiniStatWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC11DD22EE33FF4400550000 /* MiniStatWidget.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +111,9 @@
 		EC2725B7CD978C0EAA36F898 /* AssetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetTests.swift; sourceTree = "<group>"; };
 		F8588FF5EC624834CC17CD79 /* IncomeSource+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IncomeSource+Theme.swift"; sourceTree = "<group>"; };
 		FA382D65F12D43A1622C95F8 /* HistoryTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTabView.swift; sourceTree = "<group>"; };
+		AA11BB22CC33DD44EE55AA00 /* DashboardTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardTabView.swift; sourceTree = "<group>"; };
+		BB11CC22DD33EE44FF556600 /* CircularProgressRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressRing.swift; sourceTree = "<group>"; };
+		CC11DD22EE33FF4400550000 /* MiniStatWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniStatWidget.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -249,11 +255,20 @@
 			path = NetWorth;
 			sourceTree = "<group>";
 		};
+		AABBCC112233445566778800 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				AA11BB22CC33DD44EE55AA00 /* DashboardTabView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
 		CF02020F67463416D2A35D8F /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				9794CC042F6047C6FD4B33FB /* Budget */,
 				1D77FEEE1C087A57CE8C1FBB /* Charts */,
+				AABBCC112233445566778800 /* Dashboard */,
 				B88FFE179F3FD1068EADA619 /* History */,
 				C31C957A188EE2F855A2AB69 /* NetWorth */,
 				F20CBE9F221694D7A166ACD0 /* Shared */,
@@ -265,9 +280,11 @@
 			isa = PBXGroup;
 			children = (
 				26B9047B0F94605C4F5C8D70 /* AnimatedCurrencyText.swift */,
+				BB11CC22DD33EE44FF556600 /* CircularProgressRing.swift */,
 				B1CE83CBF2884BB8C9E635F0 /* CurrencyTextField.swift */,
 				7B04A7B2C6FB731B8BEB5FA2 /* EmptyStateView.swift */,
 				9A1B186197ACFDA53C478485 /* GlassCard.swift */,
+				CC11DD22EE33FF4400550000 /* MiniStatWidget.swift */,
 				B0F87FD5AC9B93C97FDE3396 /* MonthYearPicker.swift */,
 			);
 			path = Shared;
@@ -389,7 +406,9 @@
 				A1399456F5F39C443540891F /* BudgetSummaryCard.swift in Sources */,
 				875DE2D899EF245135AED92E /* BudgetTabView.swift in Sources */,
 				BCFEC1C27B4DD75ADE0F7F06 /* BudgetViewModel.swift in Sources */,
+				BB11CC22DD33EE44FF5566AA /* CircularProgressRing.swift in Sources */,
 				7796965115C4ECBD709B1061 /* ContentView.swift in Sources */,
+				AA11BB22CC33DD44EE55FF66 /* DashboardTabView.swift in Sources */,
 				723F1143933E497B7A0C929F /* CurrencyFormatter.swift in Sources */,
 				E7A37A918C986F069DD578A6 /* CurrencyTextField.swift in Sources */,
 				5D2F30BEF8DB1DB289C05978 /* DateHelpers.swift in Sources */,
@@ -403,6 +422,7 @@
 				D499B82105CBDC2B3872E8C2 /* IncomeSource.swift in Sources */,
 				EF27EC2F7524D50309EC9792 /* Liability.swift in Sources */,
 				1CFC24CBEAF8BEA38C05695F /* LiabilityType.swift in Sources */,
+				CC11DD22EE33FF4400556677 /* MiniStatWidget.swift in Sources */,
 				B33A35DAD37D3E85EDF9D5A8 /* MonthYearPicker.swift in Sources */,
 				3442BA68E5CA79C0D7AB9B10 /* NestWorthApp.swift in Sources */,
 				A53644A70B48B2149A0557A5 /* NetWorthAreaChart.swift in Sources */,
