@@ -19,49 +19,123 @@ struct AddExpenseSheet: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section("Details") {
-                    TextField("Title (e.g. Rent)", text: $title)
-                        .autocorrectionDisabled()
-                }
+            ZStack {
+                AppTheme.background.ignoresSafeArea()
+                RadialGradient(colors: [AppTheme.coral.opacity(0.05), .clear], center: .top, startRadius: 0, endRadius: 280)
+                    .ignoresSafeArea()
 
-                Section {
-                    CurrencyTextField(label: "Amount", value: $amount)
-                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                }
-
-                Section("Category") {
-                    Picker("Category", selection: $category) {
-                        ForEach(ExpenseCategory.allCases, id: \.self) { c in
-                            Label(c.rawValue, systemImage: c.icon).tag(c)
+                ScrollView {
+                    VStack(spacing: 16) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            CurrencyTextField(label: "Amount", value: $amount)
                         }
+                        .padding(AppTheme.cardPadding)
+                        .darkCard()
+
+                        darkField(label: "Title", placeholder: "e.g. Monthly Rent", text: $title)
+
+                        VStack(alignment: .leading, spacing: 12) {
+                            sectionLabel("Category")
+                            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                                ForEach(ExpenseCategory.allCases, id: \.self) { c in
+                                    categoryChip(c)
+                                }
+                            }
+                        }
+                        .padding(AppTheme.cardPadding)
+                        .darkCard()
+
+                        HStack {
+                            sectionLabel("Period")
+                            Spacer()
+                            Text(DateHelpers.displayString(month: month, year: year))
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(AppTheme.textSecondary)
+                        }
+                        .padding(AppTheme.cardPadding)
+                        .darkCard()
+
+                        darkField(label: "Note (optional)", placeholder: "Add a note...", text: $note, axis: .vertical)
                     }
-                    .pickerStyle(.menu)
-                }
-
-                Section("Period") {
-                    LabeledContent("Month", value: DateHelpers.displayString(month: month, year: year))
-                }
-
-                Section("Note (optional)") {
-                    TextField("Add a note...", text: $note, axis: .vertical)
-                        .lineLimit(3)
+                    .padding(.horizontal, AppTheme.cardPadding)
+                    .padding(.top, 20)
+                    .padding(.bottom, 40)
                 }
             }
             .navigationTitle(isEditing ? "Edit Expense" : "Add Expense")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(AppTheme.background, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
+                        .foregroundStyle(AppTheme.textTertiary)
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(isEditing ? "Update" : "Save") { save() }
                         .disabled(!isValid)
                         .fontWeight(.semibold)
+                        .foregroundStyle(isValid ? AppTheme.mint : AppTheme.textQuaternary)
                 }
             }
             .onAppear { populateIfEditing() }
         }
+    }
+
+    @ViewBuilder
+    private func categoryChip(_ c: ExpenseCategory) -> some View {
+        let selected = category == c
+        Button { category = c } label: {
+            VStack(spacing: 6) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(selected ? c.color : c.color.opacity(0.10))
+                        .frame(width: 36, height: 36)
+                    Image(systemName: c.icon)
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(selected ? AppTheme.background : c.color)
+                }
+                Text(c.rawValue)
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(selected ? AppTheme.textPrimary : AppTheme.textTertiary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            .background(selected ? AppTheme.surface2 : AppTheme.surface3, in: RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(selected ? c.color.opacity(0.5) : AppTheme.hairline, lineWidth: selected ? 1 : 0.5)
+            )
+        }
+        .buttonStyle(.plain)
+        .animation(.spring(duration: 0.25), value: selected)
+    }
+
+    @ViewBuilder
+    private func darkField(label: String, placeholder: String, text: Binding<String>, axis: Axis = .horizontal) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            sectionLabel(label)
+            TextField(placeholder, text: text, axis: axis)
+                .font(.system(size: 15))
+                .foregroundStyle(AppTheme.textPrimary)
+                .lineLimit(axis == .vertical ? 3...6 : 1...1)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 12)
+                .background(AppTheme.surface2, in: RoundedRectangle(cornerRadius: 12))
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppTheme.hairline2, lineWidth: 0.5))
+        }
+        .padding(AppTheme.cardPadding)
+        .darkCard()
+    }
+
+    private func sectionLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 11, weight: .heavy))
+            .tracking(11 * 0.08)
+            .textCase(.uppercase)
+            .foregroundStyle(AppTheme.textTertiary)
     }
 
     private func populateIfEditing() {
