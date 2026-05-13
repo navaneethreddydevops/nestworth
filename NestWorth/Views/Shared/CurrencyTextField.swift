@@ -7,25 +7,26 @@ struct CurrencyTextField: View {
     @FocusState private var isFocused: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(label)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(.system(size: 12, weight: .semibold))
+                .tracking(0.5)
+                .textCase(.uppercase)
+                .foregroundStyle(AppTheme.textTertiary)
 
-            HStack(spacing: 4) {
+            HStack(spacing: 6) {
                 Text(CurrencyFormatter.shared.currencySymbol ?? "$")
-                    .font(.body)
-                    .foregroundStyle(isFocused ? .blue : .secondary)
+                    .font(.system(size: 22, weight: .bold, design: .rounded))
+                    .foregroundStyle(isFocused ? AppTheme.mint : AppTheme.textTertiary)
 
                 TextField("0.00", text: $text)
                     .keyboardType(.decimalPad)
                     .focused($isFocused)
-                    .font(.system(.body, design: .monospaced))
+                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .foregroundStyle(AppTheme.textPrimary)
                     .onChange(of: text) { _, newValue in
                         let filtered = newValue.filter { $0.isNumber || $0 == "." }
-                        if filtered != newValue {
-                            text = filtered
-                        }
+                        if filtered != newValue { text = filtered }
                         let parts = filtered.components(separatedBy: ".")
                         if parts.count > 2 {
                             text = parts[0] + "." + parts[1...].joined()
@@ -33,20 +34,17 @@ struct CurrencyTextField: View {
                         value = Double(text) ?? 0
                     }
                     .onAppear {
-                        if value > 0 {
-                            text = String(format: "%.2f", value)
-                        }
+                        if value > 0 { text = String(format: "%.2f", value) }
                     }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .strokeBorder(
-                        isFocused ? Color.blue : Color(uiColor: .separator),
-                        lineWidth: isFocused ? 2 : 1
-                    )
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(AppTheme.surface2, in: RoundedRectangle(cornerRadius: 14))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(isFocused ? AppTheme.mint.opacity(0.6) : AppTheme.hairline2, lineWidth: isFocused ? 1.5 : 0.5)
             )
+            .animation(.easeInOut(duration: 0.15), value: isFocused)
         }
     }
 }
