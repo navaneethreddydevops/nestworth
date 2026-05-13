@@ -53,44 +53,44 @@ struct NetWorthAreaChart: View {
                         yStart: .value("Base", minValue),
                         yEnd: .value("Net Worth", snapshot.netWorth)
                     )
-                    .foregroundStyle(AppTheme.chartGradient(AppTheme.accent))
+                    .foregroundStyle(AppTheme.chartFillGradient(AppTheme.mint))
                     .interpolationMethod(.catmullRom)
 
                     LineMark(
                         x: .value("Date", snapshot.snapshotDate),
                         y: .value("Net Worth", snapshot.netWorth)
                     )
-                    .foregroundStyle(AppTheme.accent)
-                    .lineStyle(StrokeStyle(lineWidth: 2.5))
+                    .foregroundStyle(AppTheme.mint)
+                    .lineStyle(StrokeStyle(lineWidth: 2.0))
                     .interpolationMethod(.catmullRom)
 
                     PointMark(
                         x: .value("Date", snapshot.snapshotDate),
                         y: .value("Net Worth", snapshot.netWorth)
                     )
-                    .foregroundStyle(AppTheme.accent)
-                    .symbolSize(30)
+                    .foregroundStyle(AppTheme.mint)
+                    .symbolSize(24)
                 }
             }
             .chartYScale(domain: minValue...maxValue)
             .chartXAxis {
-                AxisMarks(values: .stride(by: .month)) { value in
+                AxisMarks(values: .stride(by: .month)) { _ in
                     AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5))
-                        .foregroundStyle(Color(uiColor: .separator).opacity(0.4))
-                    AxisValueLabel(format: .dateTime.month(.abbreviated).year(.twoDigits))
+                        .foregroundStyle(AppTheme.hairline)
+                    AxisValueLabel(format: .dateTime.month(.abbreviated))
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(AppTheme.textTertiary)
                 }
             }
             .chartYAxis {
                 AxisMarks(position: .leading) { value in
                     AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5))
-                        .foregroundStyle(Color(uiColor: .separator).opacity(0.4))
+                        .foregroundStyle(AppTheme.hairline)
                     AxisValueLabel {
                         if let v = value.as(Double.self) {
                             Text(CurrencyFormatter.formatCompact(v))
                                 .font(.caption2)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.textTertiary)
                         }
                     }
                 }

@@ -13,15 +13,15 @@ struct GlassCard<Content: View>: View {
         VStack(alignment: .leading, spacing: 12) {
             if let title {
                 Text(title)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .font(.system(size: 12, weight: .heavy))
+                    .tracking(12 * 0.08)
                     .textCase(.uppercase)
-                    .tracking(0.5)
+                    .foregroundStyle(AppTheme.textTertiary)
             }
             content
         }
         .padding(AppTheme.cardPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassBackground()
+        .darkCard()
     }
 }

@@ -6,6 +6,7 @@ struct NestWorthApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .colorScheme(.dark)
         }
         .modelContainer(for: [
             IncomeEntry.self,

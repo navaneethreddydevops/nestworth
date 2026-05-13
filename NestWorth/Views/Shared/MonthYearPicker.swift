@@ -6,30 +6,32 @@ struct MonthYearPicker: View {
     @State private var showPicker = false
 
     var body: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 2) {
             Button { stepMonth(by: -1) } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(AppTheme.accent)
-                    .frame(width: 36, height: 36)
+                    .foregroundStyle(AppTheme.mint)
+                    .frame(width: 32, height: 32)
             }
 
             Button { showPicker = true } label: {
                 Text(DateHelpers.displayString(month: month, year: year))
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.primary)
-                    .frame(minWidth: 130)
-                    .padding(.vertical, 8)
+                    .foregroundStyle(AppTheme.textPrimary)
+                    .frame(minWidth: 120)
+                    .padding(.vertical, 7)
             }
 
             Button { stepMonth(by: 1) } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(AppTheme.accent)
-                    .frame(width: 36, height: 36)
+                    .foregroundStyle(AppTheme.mint)
+                    .frame(width: 32, height: 32)
             }
         }
-        .background(.ultraThinMaterial, in: Capsule())
+        .padding(.horizontal, 6)
+        .background(AppTheme.surface2, in: Capsule())
+        .overlay(Capsule().stroke(AppTheme.hairline, lineWidth: 0.5))
         .sheet(isPresented: $showPicker) {
             MonthYearPickerSheet(month: $month, year: $year)
                 .presentationDetents([.height(280)])

@@ -63,17 +63,17 @@ struct AssetAllocationChart: View {
                                 .frame(width: 8, height: 8)
                             Text(slice.type.rawValue)
                                 .font(.caption)
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(AppTheme.textSecondary)
                                 .lineLimit(1)
                             Spacer()
                             Text(CurrencyFormatter.formatCompact(slice.amount))
                                 .font(.caption.weight(.semibold))
                                 .fontDesign(.monospaced)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.textTertiary)
                         }
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
-                        .background(AppTheme.surfaceTertiary, in: RoundedRectangle(cornerRadius: 8))
+                        .background(AppTheme.surface3, in: RoundedRectangle(cornerRadius: 8))
                     }
                 }
             }

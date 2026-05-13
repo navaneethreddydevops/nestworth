@@ -12,8 +12,13 @@ struct SpendingDonutChart: View {
 
     private var slices: [Slice] {
         let grouped = Dictionary(grouping: expenses, by: \.category)
-        return grouped.map { Slice(category: $0.key, amount: $0.value.reduce(0) { $0 + $1.amount }) }
+        let sorted = grouped.map { Slice(category: $0.key, amount: $0.value.reduce(0) { $0 + $1.amount }) }
             .sorted { $0.amount > $1.amount }
+        return sorted
+    }
+
+    private func color(for index: Int) -> Color {
+        AppTheme.categoryColors[index % AppTheme.categoryColors.count]
     }
 
     private var total: Double { expenses.reduce(0) { $0 + $1.amount } }
@@ -28,13 +33,13 @@ struct SpendingDonutChart: View {
         } else {
             VStack(spacing: 16) {
                 ZStack {
-                    Chart(slices) { slice in
+                    Chart(Array(slices.enumerated()), id: \.offset) { i, slice in
                         SectorMark(
                             angle: .value("Amount", slice.amount),
                             innerRadius: .ratio(0.62),
                             angularInset: 2
                         )
-                        .foregroundStyle(slice.category.color)
+                        .foregroundStyle(color(for: i))
                         .cornerRadius(4)
                     }
                     .frame(height: 200)
@@ -42,31 +47,31 @@ struct SpendingDonutChart: View {
                     VStack(spacing: 2) {
                         Text("Total")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(AppTheme.textTertiary)
                         AnimatedCurrencyText(amount: total, font: .title3.weight(.bold), compact: true)
                     }
                 }
 
                 // Legend chips
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                    ForEach(slices) { slice in
+                    ForEach(Array(slices.enumerated()), id: \.offset) { i, slice in
                         HStack(spacing: 6) {
                             Circle()
-                                .fill(slice.category.color)
+                                .fill(color(for: i))
                                 .frame(width: 8, height: 8)
                             Text(slice.category.rawValue)
                                 .font(.caption)
-                                .foregroundStyle(.primary)
+                                .foregroundStyle(AppTheme.textSecondary)
                                 .lineLimit(1)
                             Spacer()
                             Text(CurrencyFormatter.formatCompact(slice.amount))
                                 .font(.caption.weight(.semibold))
                                 .fontDesign(.monospaced)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(AppTheme.textTertiary)
                         }
                         .padding(.horizontal, 10)
                         .padding(.vertical, 6)
-                        .background(AppTheme.surfaceTertiary, in: RoundedRectangle(cornerRadius: 8))
+                        .background(AppTheme.surface3, in: RoundedRectangle(cornerRadius: 8))
                     }
                 }
             }
