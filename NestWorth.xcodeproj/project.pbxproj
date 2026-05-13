@@ -12,11 +12,13 @@
 		195A490CCD061681F2E34758 /* AssetAllocationChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8691E6B308DF694A315FF0 /* AssetAllocationChart.swift */; };
 		1CFC24CBEAF8BEA38C05695F /* LiabilityType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B78C55B328995C36D3575614 /* LiabilityType.swift */; };
 		22FAA43D3CC72A6DA79D630F /* ExpenseCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EC4EFD8A27FEBCCC647F4F /* ExpenseCategory.swift */; };
+		2981E0EB644DD03737225030 /* SparkAreaChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFFAEEBC0976A7DD69B5378 /* SparkAreaChart.swift */; };
 		2DA27D14188507FA01B5CFA6 /* BudgetViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C18D86516BE3AB448B834A5 /* BudgetViewModelTests.swift */; };
 		3442BA68E5CA79C0D7AB9B10 /* NestWorthApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E98D73771D971573EBA9C7C /* NestWorthApp.swift */; };
 		3BD121B0CE2E225F6594CFE9 /* AddExpenseSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E170B9FBB7E4AD322E9871 /* AddExpenseSheet.swift */; };
 		4C518CE20F3C8B2F18D063BA /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04A7B2C6FB731B8BEB5FA2 /* EmptyStateView.swift */; };
 		5011BFC0CBBE6E0FF8CFAA33 /* NetWorthSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A89961C27E60416667C870B /* NetWorthSnapshot.swift */; };
+		5269D9A49780CA59399FD3C3 /* CircularProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5233CE6127C12686FD7338BB /* CircularProgressRing.swift */; };
 		5281B0AC7CE44EC4BB591963 /* LiabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC25F91FA97F7AF884A7D0C /* LiabilityTests.swift */; };
 		53EE1FA0523C213A7133E830 /* AnimatedCurrencyText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B9047B0F94605C4F5C8D70 /* AnimatedCurrencyText.swift */; };
 		55653CAD7CE6A82D9FEB1D88 /* SpendingDonutChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = E829070DE0AEF9FBDEA9C212 /* SpendingDonutChart.swift */; };
@@ -37,6 +39,7 @@
 		A53644A70B48B2149A0557A5 /* NetWorthAreaChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19ADD1BF22AB8C14A449930D /* NetWorthAreaChart.swift */; };
 		B21D55F9F5D0298EAE667DCC /* NetWorthTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EF231B5003DD2ABD9CD96D /* NetWorthTabView.swift */; };
 		B33A35DAD37D3E85EDF9D5A8 /* MonthYearPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0F87FD5AC9B93C97FDE3396 /* MonthYearPicker.swift */; };
+		B3D54ACB3F3DEF0385724972 /* CategoryBreakdownRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41053A6F4B388BE6F2E3AB7 /* CategoryBreakdownRow.swift */; };
 		B8DB9BF5C6E1014A574CF1BC /* DateHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B18EE1A049F6C6299B36C1 /* DateHelpersTests.swift */; };
 		BCFEC1C27B4DD75ADE0F7F06 /* BudgetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C39E6C71B5E62ADDCA72CE /* BudgetViewModel.swift */; };
 		C383887246FB44A9A520CA43 /* AddIncomeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929CB2F9BDB700D1468F99A1 /* AddIncomeSheet.swift */; };
@@ -81,6 +84,7 @@
 		4C18D86516BE3AB448B834A5 /* BudgetViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetViewModelTests.swift; sourceTree = "<group>"; };
 		4F5DF56AC8FF6F391B19534C /* NestWorth.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NestWorth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50159CBD332253C8B7929DA5 /* CurrencyFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatterTests.swift; sourceTree = "<group>"; };
+		5233CE6127C12686FD7338BB /* CircularProgressRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressRing.swift; sourceTree = "<group>"; };
 		52B715FCA5EA35B72A2FB64B /* NestWorthTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NestWorthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		569DD6502E3882CB3F65553D /* AddLiabilitySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLiabilitySheet.swift; sourceTree = "<group>"; };
 		65C185B3B8D118E9AFB8AE74 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
@@ -107,6 +111,7 @@
 		B1CE83CBF2884BB8C9E635F0 /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
 		B78C55B328995C36D3575614 /* LiabilityType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiabilityType.swift; sourceTree = "<group>"; };
 		C3C39E6C71B5E62ADDCA72CE /* BudgetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetViewModel.swift; sourceTree = "<group>"; };
+		D1934DBB6DD244C8B9DEA33D /* MiniStatWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniStatWidget.swift; sourceTree = "<group>"; };
 		D400278359134414F245FC59 /* SnapshotRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotRowView.swift; sourceTree = "<group>"; };
 		D41053A6F4B388BE6F2E3AB7 /* CategoryBreakdownRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryBreakdownRow.swift; sourceTree = "<group>"; };
 		E1E170B9FBB7E4AD322E9871 /* AddExpenseSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseSheet.swift; sourceTree = "<group>"; };
@@ -410,7 +415,8 @@
 				A1399456F5F39C443540891F /* BudgetSummaryCard.swift in Sources */,
 				875DE2D899EF245135AED92E /* BudgetTabView.swift in Sources */,
 				BCFEC1C27B4DD75ADE0F7F06 /* BudgetViewModel.swift in Sources */,
-				BB11CC22DD33EE44FF5566AA /* CircularProgressRing.swift in Sources */,
+				B3D54ACB3F3DEF0385724972 /* CategoryBreakdownRow.swift in Sources */,
+				5269D9A49780CA59399FD3C3 /* CircularProgressRing.swift in Sources */,
 				7796965115C4ECBD709B1061 /* ContentView.swift in Sources */,
 				723F1143933E497B7A0C929F /* CurrencyFormatter.swift in Sources */,
 				E7A37A918C986F069DD578A6 /* CurrencyTextField.swift in Sources */,
