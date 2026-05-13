@@ -37,3 +37,19 @@ targets:
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
         ENABLE_PREVIEWS: YES
+
+  NestWorthTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: NestWorthTests
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - target: NestWorth
+    settings:
+      base:
+        SWIFT_VERSION: "5.9"
+        PRODUCT_NAME: NestWorthTests
+        GENERATE_INFOPLIST_FILE: YES
