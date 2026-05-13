@@ -87,6 +87,15 @@ struct DashboardTabView: View {
         .ignoresSafeArea()
     }
 
+    private var timeOfDayGreeting: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        case 0..<12:  return "Good morning"
+        case 12..<17: return "Good afternoon"
+        default:      return "Good evening"
+        }
+    }
+
     // MARK: - Greeting header
     private var greetingHeader: some View {
         HStack(alignment: .center) {
@@ -96,21 +105,32 @@ struct DashboardTabView: View {
                     .tracking(0.08 * 11)
                     .textCase(.uppercase)
                     .foregroundStyle(AppTheme.textTertiary)
-                Text("Overview")
+                Text(timeOfDayGreeting)
                     .font(.system(size: 28, weight: .bold))
                     .tracking(-0.02 * 28)
                     .foregroundStyle(AppTheme.textPrimary)
             }
             Spacer()
-            ZStack {
-                Circle()
-                    .fill(AppTheme.surface3)
-                    .frame(width: 38, height: 38)
-                Text("N")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(AppTheme.mint)
+            HStack(spacing: 8) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 11)
+                        .fill(AppTheme.surface)
+                        .frame(width: 38, height: 38)
+                        .overlay(RoundedRectangle(cornerRadius: 11).stroke(AppTheme.hairline, lineWidth: 0.5))
+                    Image(systemName: "bell")
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundStyle(AppTheme.textSecondary)
+                }
+                ZStack {
+                    Circle()
+                        .fill(AppTheme.surface3)
+                        .frame(width: 38, height: 38)
+                    Text("N")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(AppTheme.mint)
+                }
+                .overlay(Circle().stroke(AppTheme.hairline2, lineWidth: 0.5))
             }
-            .overlay(Circle().stroke(AppTheme.hairline2, lineWidth: 0.5))
         }
     }
 
@@ -190,10 +210,10 @@ struct DashboardTabView: View {
     // MARK: - 2x2 stat grid
     private var statGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-            MiniStatWidget(icon: "arrow.down.circle", label: "Income",      value: CurrencyFormatter.formatCompact(monthlyIncome),   accentColor: AppTheme.mint)
-            MiniStatWidget(icon: "arrow.up.circle",   label: "Expenses",    value: CurrencyFormatter.formatCompact(monthlyExpenses), accentColor: AppTheme.coral)
-            MiniStatWidget(icon: "sparkles",           label: "Saved",       value: CurrencyFormatter.formatCompact(max(savings, 0)), accentColor: AppTheme.violet)
-            MiniStatWidget(icon: "chart.line.uptrend.xyaxis", label: "Save Rate", value: "\(Int(savingsRate * 100))%",               accentColor: AppTheme.cyan)
+            MiniStatWidget(icon: "arrow.down.circle", label: "Income",    value: CurrencyFormatter.formatCompact(monthlyIncome),   sub: "this month",                          accentColor: AppTheme.mint)
+            MiniStatWidget(icon: "arrow.up.circle",   label: "Expenses",  value: CurrencyFormatter.formatCompact(monthlyExpenses), sub: "this month",                          accentColor: AppTheme.coral)
+            MiniStatWidget(icon: "sparkles",           label: "Saved",     value: CurrencyFormatter.formatCompact(max(savings, 0)), sub: "\(Int(savingsRate * 100))% rate",     accentColor: AppTheme.violet)
+            MiniStatWidget(icon: "chart.line.uptrend.xyaxis", label: "Save Rate", value: "\(Int(savingsRate * 100))%",             sub: "target >20%",                         accentColor: AppTheme.cyan)
         }
     }
 
