@@ -316,7 +316,9 @@ struct DashboardTabView: View {
                     )
                     healthPillar(
                         label: "Emergency",
-                        value: emergencyFundMonths >= 0.1 ? String(format: "%.1f mo", emergencyFundMonths) : "—",
+                        value: emergencyFundMonths >= 0.1
+                            ? (emergencyFundMonths >= 100 ? "99+ mo" : String(format: "%.1f mo", emergencyFundMonths))
+                            : "—",
                         target: ">6 mo",
                         met: emergencyFundMet
                     )
@@ -341,15 +343,20 @@ struct DashboardTabView: View {
             Text(label)
                 .font(.system(size: 12))
                 .foregroundStyle(AppTheme.textSecondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
             Spacer()
             Text(value)
                 .font(.system(size: 12, weight: .bold))
                 .monospacedDigit()
                 .foregroundStyle(AppTheme.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
             Text(target)
                 .font(.system(size: 10))
                 .foregroundStyle(AppTheme.textQuaternary)
                 .frame(width: 34, alignment: .trailing)
+                .lineLimit(1)
         }
     }
 
