@@ -25,6 +25,8 @@ struct ContentView: View {
             AddEntrySheet()
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
+                .presentationBackground(AppTheme.background)
+                .preferredColorScheme(.dark)
         }
     }
 }
@@ -111,9 +113,16 @@ private struct AddEntrySheet: View {
             .padding(20)
             .navigationTitle("Add Entry")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(AppTheme.background, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Cancel") { dismiss() }
+                        .foregroundStyle(AppTheme.textTertiary)
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { dismiss() }
+                        .fontWeight(.semibold)
                         .foregroundStyle(AppTheme.mint)
                 }
             }

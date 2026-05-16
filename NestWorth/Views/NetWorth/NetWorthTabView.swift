@@ -80,6 +80,27 @@ struct NetWorthTabView: View {
         .sheet(isPresented: $showAddLiability)  { AddLiabilitySheet() }
         .sheet(item: $editingAsset)     { AddAssetSheet(existing: $0) }
         .sheet(item: $editingLiability) { AddLiabilitySheet(existing: $0) }
+        .onChange(of: netWorth) { _, _ in autoSaveSnapshot() }
+    }
+
+    // Auto-save or update today's snapshot whenever net worth changes
+    private func autoSaveSnapshot() {
+        let descriptor = FetchDescriptor<NetWorthSnapshot>()
+        guard let all = try? modelContext.fetch(descriptor) else { return }
+        let today = Calendar.current.startOfDay(for: Date())
+        if let existing = all.first(where: { Calendar.current.isDate($0.snapshotDate, inSameDayAs: today) }) {
+            existing.totalAssets      = totalAssets
+            existing.totalLiabilities = totalLiabilities
+        } else {
+            let snap = NetWorthSnapshot(
+                displayMonth:     DateHelpers.currentMonth(),
+                displayYear:      DateHelpers.currentYear(),
+                totalAssets:      totalAssets,
+                totalLiabilities: totalLiabilities,
+                note:             ""
+            )
+            modelContext.insert(snap)
+        }
     }
 
     private var appBackground: some View {
