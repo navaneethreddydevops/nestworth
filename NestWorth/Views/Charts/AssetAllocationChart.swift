@@ -34,48 +34,49 @@ struct AssetAllocationChart: View {
                 subtitle: "Add assets to see your allocation"
             )
         } else {
-            VStack(spacing: 16) {
+            HStack(alignment: .center, spacing: 16) {
+                // Donut on the left
                 ZStack {
                     Chart(slices) { slice in
                         SectorMark(
                             angle: .value("Value", slice.amount),
-                            innerRadius: .ratio(0.62),
+                            innerRadius: .ratio(0.60),
                             angularInset: 2
                         )
                         .foregroundStyle(slice.color)
                         .cornerRadius(4)
                     }
-                    .frame(height: 200)
+                    .frame(width: 160, height: 160)
 
                     VStack(spacing: 2) {
-                        Text("Assets")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        AnimatedCurrencyText(amount: total, font: .title3.weight(.bold), compact: true)
+                        Text("TOTAL ASSETS")
+                            .font(.system(size: 9, weight: .heavy))
+                            .tracking(9 * 0.06)
+                            .foregroundStyle(AppTheme.textTertiary)
+                        AnimatedCurrencyText(amount: total, font: .system(size: 17, weight: .bold, design: .rounded), compact: true)
                     }
                 }
 
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
+                // Vertical legend on the right
+                VStack(alignment: .leading, spacing: 8) {
                     ForEach(slices) { slice in
-                        HStack(spacing: 6) {
+                        HStack(spacing: 8) {
                             Circle()
                                 .fill(slice.color)
                                 .frame(width: 8, height: 8)
                             Text(slice.type.rawValue)
-                                .font(.caption)
+                                .font(.system(size: 12))
                                 .foregroundStyle(AppTheme.textSecondary)
                                 .lineLimit(1)
                             Spacer()
-                            Text(CurrencyFormatter.formatCompact(slice.amount))
-                                .font(.caption.weight(.semibold))
-                                .fontDesign(.monospaced)
+                            Text(String(format: "%.0f%%", total > 0 ? slice.amount / total * 100 : 0))
+                                .font(.system(size: 12, weight: .semibold))
+                                .monospacedDigit()
                                 .foregroundStyle(AppTheme.textTertiary)
                         }
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(AppTheme.surface3, in: RoundedRectangle(cornerRadius: 8))
                     }
                 }
+                .frame(maxWidth: .infinity)
             }
         }
     }
