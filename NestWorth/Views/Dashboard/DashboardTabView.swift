@@ -10,6 +10,8 @@ struct DashboardTabView: View {
     @Query private var allIncome:   [IncomeEntry]
     @Query private var allExpenses: [ExpenseEntry]
 
+    @AppStorage("userName") private var userName: String = "Alex"
+
     private var totalAssets:      Double { assets.reduce(0)      { $0 + $1.value } }
     private var totalLiabilities: Double { liabilities.reduce(0) { $0 + $1.balance } }
     private var netWorth:         Double { totalAssets - totalLiabilities }
@@ -29,26 +31,21 @@ struct DashboardTabView: View {
     private var savings: Double { monthlyIncome - monthlyExpenses }
     private var savingsRate: Double { monthlyIncome > 0 ? max(0, savings / monthlyIncome) : 0 }
 
-    private var prevMonthDate: Date { Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date() }
-    private var prevMonth: Int { Calendar.current.component(.month, from: prevMonthDate) }
-    private var prevYear:  Int { Calendar.current.component(.year,  from: prevMonthDate) }
-
-    private var prevMonthIncome:   Double { allIncome.filter   { $0.month == prevMonth && $0.year == prevYear }.reduce(0) { $0 + $1.amount } }
-    private var prevMonthExpenses: Double { allExpenses.filter { $0.month == prevMonth && $0.year == prevYear }.reduce(0) { $0 + $1.amount } }
-    private var prevSavings: Double { prevMonthIncome - prevMonthExpenses }
-
-    private var cashflowChangePct: Double? {
-        guard prevSavings > 0 else { return nil }
-        return (savings - prevSavings) / prevSavings
+    // Net worth % change from last snapshot
+    private var netWorthChangePct: Double? {
+        guard let prev = previousNetWorth, prev != 0 else { return nil }
+        return (netWorth - prev) / abs(prev)
     }
-    private var cashflowValue: String {
-        if let pct = cashflowChangePct { return String(format: "%+.1f%%", pct * 100) }
-        return CurrencyFormatter.formatCompact(max(savings, 0))
+    private var netWorthChangeValue: String {
+        if let pct = netWorthChangePct { return String(format: "%+.1f%%", pct * 100) }
+        return "—"
     }
-    private var cashflowSub: String { cashflowChangePct != nil ? "vs last month" : "net saved" }
-    private var cashflowColor: Color {
-        if let pct = cashflowChangePct { return pct >= 0 ? AppTheme.cyan : AppTheme.coral }
-        return AppTheme.cyan
+    private var netWorthChangeColor: Color {
+        guard let pct = netWorthChangePct else { return AppTheme.textTertiary }
+        return pct >= 0 ? AppTheme.mint : AppTheme.coral
+    }
+    private var netWorthChangeSub: String {
+        previousNetWorth != nil ? "vs snapshot" : "no snapshot"
     }
 
     private var liquidAssets: Double {
@@ -105,7 +102,7 @@ struct DashboardTabView: View {
         .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 90) }
     }
 
-    // MARK: - Background with subtle mint glow
+    // MARK: - Background
     private var appBackground: some View {
         ZStack {
             AppTheme.background
@@ -119,11 +116,13 @@ struct DashboardTabView: View {
 
     private var timeOfDayGreeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
+        let tod: String
         switch hour {
-        case 0..<12:  return "Morning"
-        case 12..<17: return "Afternoon"
-        default:      return "Evening"
+        case 0..<12:  tod = "Morning"
+        case 12..<17: tod = "Afternoon"
+        default:      tod = "Evening"
         }
+        return userName.isEmpty ? tod : "\(tod), \(userName)"
     }
 
     private var formattedDate: String {
@@ -160,7 +159,7 @@ struct DashboardTabView: View {
                     Circle()
                         .fill(AppTheme.surface3)
                         .frame(width: 38, height: 38)
-                    Text("N")
+                    Text(userName.prefix(1).uppercased())
                         .font(.system(size: 14, weight: .bold))
                         .foregroundStyle(AppTheme.mint)
                 }
@@ -242,13 +241,39 @@ struct DashboardTabView: View {
         .darkCard()
     }
 
-    // MARK: - 2x2 stat grid
+    // MARK: - 2x2 stat grid: Income | Savings | Debts | Change
     private var statGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-            MiniStatWidget(icon: "arrow.down.circle", label: "Income",   value: CurrencyFormatter.formatCompact(monthlyIncome),   sub: "this month",                      accentColor: AppTheme.mint)
-            MiniStatWidget(icon: "arrow.up.circle",   label: "Expenses", value: CurrencyFormatter.formatCompact(monthlyExpenses), sub: "this month",                      accentColor: AppTheme.coral)
-            MiniStatWidget(icon: "sparkles",           label: "Saved",    value: CurrencyFormatter.formatCompact(max(savings, 0)), sub: "\(Int(savingsRate * 100))% rate", accentColor: AppTheme.violet)
-            MiniStatWidget(icon: "arrow.up.right",     label: "Cashflow", value: cashflowValue,                                    sub: cashflowSub,                       accentColor: cashflowColor, valueColor: cashflowColor)
+            MiniStatWidget(
+                icon: "arrow.down.circle",
+                label: "Income",
+                value: CurrencyFormatter.formatCompact(monthlyIncome),
+                sub: "this month",
+                accentColor: AppTheme.mint
+            )
+            MiniStatWidget(
+                icon: "sparkles",
+                label: "Savings",
+                value: CurrencyFormatter.formatCompact(max(savings, 0)),
+                sub: "\(Int(savingsRate * 100))% rate",
+                accentColor: AppTheme.violet
+            )
+            MiniStatWidget(
+                icon: "creditcard",
+                label: "Debts",
+                value: CurrencyFormatter.formatCompact(totalLiabilities),
+                sub: "total owed",
+                accentColor: AppTheme.coral,
+                valueColor: totalLiabilities > 0 ? AppTheme.coral : AppTheme.textPrimary
+            )
+            MiniStatWidget(
+                icon: "arrow.up.right",
+                label: "Change",
+                value: netWorthChangeValue,
+                sub: netWorthChangeSub,
+                accentColor: netWorthChangeColor,
+                valueColor: netWorthChangeColor
+            )
         }
     }
 
@@ -277,11 +302,24 @@ struct DashboardTabView: View {
                 )
 
                 VStack(alignment: .leading, spacing: 10) {
-                    healthPillar(label: "Savings rate",   value: "\(Int(savingsRate * 100))%",  target: ">20%",  met: savingsRate >= 0.20)
-                    healthPillar(label: "Debt-to-asset",  value: totalAssets > 0 ? "\(Int(min(totalLiabilities / totalAssets, 1) * 100))%" : "—", target: "<40%", met: totalAssets > 0 && totalLiabilities / totalAssets < 0.4)
-                    healthPillar(label: "Emergency fund",
-                                 value: emergencyFundMonths >= 0.1 ? String(format: "%.1f mo", emergencyFundMonths) : "—",
-                                 target: ">6 mo", met: emergencyFundMet)
+                    healthPillar(
+                        label: "Savings",
+                        value: "\(Int(savingsRate * 100))%",
+                        target: ">20%",
+                        met: savingsRate >= 0.20
+                    )
+                    healthPillar(
+                        label: "Debt ratio",
+                        value: totalAssets > 0 ? "\(Int(min(totalLiabilities / totalAssets, 1) * 100))%" : "—",
+                        target: "<40%",
+                        met: totalAssets > 0 && totalLiabilities / totalAssets < 0.4
+                    )
+                    healthPillar(
+                        label: "Emergency",
+                        value: emergencyFundMonths >= 0.1 ? String(format: "%.1f mo", emergencyFundMonths) : "—",
+                        target: ">6 mo",
+                        met: emergencyFundMet
+                    )
                 }
             }
         }
