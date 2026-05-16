@@ -12,6 +12,7 @@ struct BudgetTabView: View {
     @State private var showAddExpense = false
     @State private var editingIncome:  IncomeEntry? = nil
     @State private var editingExpense: ExpenseEntry? = nil
+    @State private var selectedCategory: ExpenseCategory? = nil
 
     private var filteredIncome: [IncomeEntry] {
         allIncome.filter { $0.month == selectedMonth && $0.year == selectedYear }
@@ -76,6 +77,13 @@ struct BudgetTabView: View {
         .sheet(isPresented: $showAddExpense) { AddExpenseSheet(month: selectedMonth, year: selectedYear) }
         .sheet(item: $editingIncome)  { AddIncomeSheet(month: selectedMonth,  year: selectedYear, existing: $0) }
         .sheet(item: $editingExpense) { AddExpenseSheet(month: selectedMonth, year: selectedYear, existing: $0) }
+        .sheet(item: $selectedCategory) { category in
+            CategoryDetailView(
+                category: category,
+                expenses: filteredExpenses.filter { $0.category == category },
+                month: selectedMonth, year: selectedYear
+            )
+        }
     }
 
     private var appBackground: some View {
@@ -148,17 +156,18 @@ struct BudgetTabView: View {
             let total  = totalExpenses > 0 ? totalExpenses : 1
 
             VStack(spacing: 12) {
-                ForEach(Array(categoryGroups.enumerated()), id: \.element.id) { i, group in
-                    let color = AppTheme.categoryColors[i % AppTheme.categoryColors.count]
+                ForEach(categoryGroups) { group in
                     CategoryBreakdownRow(
                         icon: group.category.icon,
                         name: group.category.rawValue,
-                        color: color,
+                        color: group.category.color,
                         amount: group.amount,
                         fraction: group.amount / maxAmt,
                         count: group.count,
                         sharePct: group.amount / total * 100
                     )
+                    .contentShape(Rectangle())
+                    .onTapGesture { selectedCategory = group.category }
                 }
             }
         }

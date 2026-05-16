@@ -57,7 +57,7 @@ struct NetWorthTabView: View {
                     ForEach(liabilities) { liability in
                         HoldingRow(name: liability.name, detail: liability.type.rawValue,
                                    amount: liability.balance, icon: liability.type.icon,
-                                   iconColor: AppTheme.coral, amountColor: AppTheme.coral)
+                                   iconColor: liability.type.color, amountColor: AppTheme.coral)
                         .contentShape(Rectangle())
                         .onTapGesture { editingLiability = liability }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
