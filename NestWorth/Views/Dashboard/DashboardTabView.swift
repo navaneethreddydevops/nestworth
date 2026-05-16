@@ -29,12 +29,42 @@ struct DashboardTabView: View {
     private var savings: Double { monthlyIncome - monthlyExpenses }
     private var savingsRate: Double { monthlyIncome > 0 ? max(0, savings / monthlyIncome) : 0 }
 
+    private var prevMonthDate: Date { Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date() }
+    private var prevMonth: Int { Calendar.current.component(.month, from: prevMonthDate) }
+    private var prevYear:  Int { Calendar.current.component(.year,  from: prevMonthDate) }
+
+    private var prevMonthIncome:   Double { allIncome.filter   { $0.month == prevMonth && $0.year == prevYear }.reduce(0) { $0 + $1.amount } }
+    private var prevMonthExpenses: Double { allExpenses.filter { $0.month == prevMonth && $0.year == prevYear }.reduce(0) { $0 + $1.amount } }
+    private var prevSavings: Double { prevMonthIncome - prevMonthExpenses }
+
+    private var cashflowChangePct: Double? {
+        guard prevSavings > 0 else { return nil }
+        return (savings - prevSavings) / prevSavings
+    }
+    private var cashflowValue: String {
+        if let pct = cashflowChangePct { return String(format: "%+.1f%%", pct * 100) }
+        return CurrencyFormatter.formatCompact(max(savings, 0))
+    }
+    private var cashflowSub: String { cashflowChangePct != nil ? "vs last month" : "net saved" }
+    private var cashflowColor: Color {
+        if let pct = cashflowChangePct { return pct >= 0 ? AppTheme.cyan : AppTheme.coral }
+        return AppTheme.cyan
+    }
+
+    private var liquidAssets: Double {
+        assets.filter { $0.type == .checking || $0.type == .savings }.reduce(0) { $0 + $1.value }
+    }
+    private var emergencyFundMonths: Double {
+        monthlyExpenses > 0 ? liquidAssets / monthlyExpenses : 0
+    }
+    private var emergencyFundMet: Bool { emergencyFundMonths >= 6 }
+
     private var healthScore: Int {
         var score = 0
         if savingsRate >= 0.20 { score += 35 }
         else if savingsRate > 0 { score += Int(savingsRate / 0.20 * 35) }
-        if netWorth > 0 { score += 35 }
-        if totalLiabilities == 0 || (totalAssets > 0 && totalLiabilities / totalAssets < 0.4) { score += 30 }
+        if totalLiabilities == 0 || (totalAssets > 0 && totalLiabilities / totalAssets < 0.4) { score += 35 }
+        if emergencyFundMet { score += 30 }
         return min(score, 100)
     }
 
@@ -90,20 +120,25 @@ struct DashboardTabView: View {
     private var timeOfDayGreeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
-        case 0..<12:  return "Good morning"
-        case 12..<17: return "Good afternoon"
-        default:      return "Good evening"
+        case 0..<12:  return "Morning"
+        case 12..<17: return "Afternoon"
+        default:      return "Evening"
         }
+    }
+
+    private var formattedDate: String {
+        let weekday = Date().formatted(.dateTime.weekday(.abbreviated)).uppercased()
+        let monthDay = Date().formatted(.dateTime.month(.abbreviated).day()).uppercased()
+        return "\(weekday) · \(monthDay)"
     }
 
     // MARK: - Greeting header
     private var greetingHeader: some View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(Date().formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))
+                Text(formattedDate)
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(0.08 * 11)
-                    .textCase(.uppercase)
                     .foregroundStyle(AppTheme.textTertiary)
                 Text(timeOfDayGreeting)
                     .font(.system(size: 28, weight: .bold))
@@ -210,10 +245,10 @@ struct DashboardTabView: View {
     // MARK: - 2x2 stat grid
     private var statGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-            MiniStatWidget(icon: "arrow.down.circle", label: "Income",    value: CurrencyFormatter.formatCompact(monthlyIncome),   sub: "this month",                          accentColor: AppTheme.mint)
-            MiniStatWidget(icon: "arrow.up.circle",   label: "Expenses",  value: CurrencyFormatter.formatCompact(monthlyExpenses), sub: "this month",                          accentColor: AppTheme.coral)
-            MiniStatWidget(icon: "sparkles",           label: "Saved",     value: CurrencyFormatter.formatCompact(max(savings, 0)), sub: "\(Int(savingsRate * 100))% rate",     accentColor: AppTheme.violet)
-            MiniStatWidget(icon: "chart.line.uptrend.xyaxis", label: "Save Rate", value: "\(Int(savingsRate * 100))%",             sub: "target >20%",                         accentColor: AppTheme.cyan)
+            MiniStatWidget(icon: "arrow.down.circle", label: "Income",   value: CurrencyFormatter.formatCompact(monthlyIncome),   sub: "this month",                      accentColor: AppTheme.mint)
+            MiniStatWidget(icon: "arrow.up.circle",   label: "Expenses", value: CurrencyFormatter.formatCompact(monthlyExpenses), sub: "this month",                      accentColor: AppTheme.coral)
+            MiniStatWidget(icon: "sparkles",           label: "Saved",    value: CurrencyFormatter.formatCompact(max(savings, 0)), sub: "\(Int(savingsRate * 100))% rate", accentColor: AppTheme.violet)
+            MiniStatWidget(icon: "arrow.up.right",     label: "Cashflow", value: cashflowValue,                                    sub: cashflowSub,                       accentColor: cashflowColor, valueColor: cashflowColor)
         }
     }
 
@@ -242,9 +277,11 @@ struct DashboardTabView: View {
                 )
 
                 VStack(alignment: .leading, spacing: 10) {
-                    healthPillar(label: "Savings rate",   value: "\(Int(savingsRate * 100))%",  target: ">20%", met: savingsRate >= 0.20)
+                    healthPillar(label: "Savings rate",   value: "\(Int(savingsRate * 100))%",  target: ">20%",  met: savingsRate >= 0.20)
                     healthPillar(label: "Debt-to-asset",  value: totalAssets > 0 ? "\(Int(min(totalLiabilities / totalAssets, 1) * 100))%" : "—", target: "<40%", met: totalAssets > 0 && totalLiabilities / totalAssets < 0.4)
-                    healthPillar(label: "Positive NW",    value: netWorth >= 0 ? "Yes" : "No",  target: ">0",   met: netWorth >= 0)
+                    healthPillar(label: "Emergency fund",
+                                 value: emergencyFundMonths >= 0.1 ? String(format: "%.1f mo", emergencyFundMonths) : "—",
+                                 target: ">6 mo", met: emergencyFundMet)
                 }
             }
         }
