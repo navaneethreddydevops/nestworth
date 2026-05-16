@@ -34,6 +34,18 @@ enum AppTheme {
     static let surfaceTertiary = surface3
 
     // MARK: - Category / asset palette (7 slots)
+    // Ordered palette for donut / top-holdings bar (index matches AssetType.allCases order)
+    // checking, savings, investment, realEstate, vehicle, retirement, other
+    static let assetColors: [Color] = [
+        Color(hex: "#93C5FD"),  // checking  — soft blue
+        Color(hex: "#5EEAD4"),  // savings   — mint
+        Color(hex: "#C4B5FD"),  // investment — lavender
+        Color(hex: "#FDBA74"),  // realEstate — peach
+        Color(hex: "#67E8F9"),  // vehicle   — cyan
+        Color(hex: "#F0ABFC"),  // retirement — pink
+        Color(hex: "#94A3B8"),  // other     — slate
+    ]
+    // Generic ordered palette for charts/donuts when not tied to AssetType
     static let categoryColors: [Color] = [
         Color(hex: "#60A5FA"),
         Color(hex: "#34D399"),
@@ -43,7 +55,6 @@ enum AppTheme {
         Color(hex: "#2DD4BF"),
         Color(hex: "#94A3B8"),
     ]
-    static let assetColors: [Color] = categoryColors
 
     // MARK: - Gradients
     static let mintVioletGradient = LinearGradient(

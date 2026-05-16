@@ -1,7 +1,8 @@
 import Foundation
 import SwiftUI
 
-enum ExpenseCategory: String, CaseIterable, Codable {
+enum ExpenseCategory: String, CaseIterable, Codable, Identifiable {
+    var id: String { rawValue }
     case housing = "Housing"
     case food = "Food"
     case transport = "Transport"
@@ -28,15 +29,15 @@ enum ExpenseCategory: String, CaseIterable, Codable {
 
     var color: Color {
         switch self {
-        case .housing:       return Color(red: 0.231, green: 0.510, blue: 0.965)
-        case .food:          return Color(red: 0.976, green: 0.451, blue: 0.086)
-        case .transport:     return Color(red: 0.063, green: 0.725, blue: 0.506)
-        case .utilities:     return Color(red: 0.984, green: 0.749, blue: 0.141)
-        case .entertainment: return Color(red: 0.545, green: 0.361, blue: 0.965)
-        case .health:        return Color(red: 0.937, green: 0.267, blue: 0.267)
-        case .education:     return Color(red: 0.024, green: 0.714, blue: 0.831)
-        case .clothing:      return Color(red: 0.925, green: 0.251, blue: 0.600)
-        case .other:         return Color(red: 0.612, green: 0.639, blue: 0.686)
+        case .housing:       return Color(hex: "#93C5FD")
+        case .food:          return Color(hex: "#FCD34D")
+        case .transport:     return Color(hex: "#5EEAD4")
+        case .utilities:     return Color(hex: "#FDBA74")
+        case .entertainment: return Color(hex: "#C4B5FD")
+        case .health:        return Color(hex: "#FCA5A5")
+        case .education:     return Color(hex: "#67E8F9")
+        case .clothing:      return Color(hex: "#F0ABFC")
+        case .other:         return Color(hex: "#94A3B8")
         }
     }
 }
