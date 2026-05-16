@@ -23,31 +23,44 @@ struct DashboardTabView: View {
     private var monthlyIncome: Double {
         allIncome.filter { $0.month == currentMonth && $0.year == currentYear }.reduce(0) { $0 + $1.amount }
     }
-
     private var monthlyExpenses: Double {
         allExpenses.filter { $0.month == currentMonth && $0.year == currentYear }.reduce(0) { $0 + $1.amount }
     }
-
     private var savings: Double { monthlyIncome - monthlyExpenses }
     private var savingsRate: Double { monthlyIncome > 0 ? max(0, savings / monthlyIncome) : 0 }
 
-    // Net worth % change from last snapshot
-    private var netWorthChangePct: Double? {
+    // Cashflow vs previous month
+    private var prevMonthDate: Date { Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date() }
+    private var prevMonth: Int { Calendar.current.component(.month, from: prevMonthDate) }
+    private var prevYear:  Int { Calendar.current.component(.year,  from: prevMonthDate) }
+    private var prevMonthIncome:   Double { allIncome.filter   { $0.month == prevMonth && $0.year == prevYear }.reduce(0) { $0 + $1.amount } }
+    private var prevMonthExpenses: Double { allExpenses.filter { $0.month == prevMonth && $0.year == prevYear }.reduce(0) { $0 + $1.amount } }
+    private var prevSavings: Double { prevMonthIncome - prevMonthExpenses }
+    private var cashflowChangePct: Double? {
+        guard prevSavings > 0 else { return nil }
+        return (savings - prevSavings) / prevSavings
+    }
+    private var cashflowValue: String {
+        if let pct = cashflowChangePct { return String(format: "%+.1f%%", pct * 100) }
+        return CurrencyFormatter.formatCompact(max(savings, 0))
+    }
+    private var cashflowSub: String { cashflowChangePct != nil ? "vs last month" : "net saved" }
+    private var cashflowColor: Color {
+        if let pct = cashflowChangePct { return pct >= 0 ? AppTheme.cyan : AppTheme.coral }
+        return AppTheme.cyan
+    }
+
+    // Net worth delta for hero chip
+    private var netWorthDelta: Double? {
+        guard let prev = previousNetWorth else { return nil }
+        return netWorth - prev
+    }
+    private var netWorthDeltaPct: Double? {
         guard let prev = previousNetWorth, prev != 0 else { return nil }
         return (netWorth - prev) / abs(prev)
     }
-    private var netWorthChangeValue: String {
-        if let pct = netWorthChangePct { return String(format: "%+.1f%%", pct * 100) }
-        return "—"
-    }
-    private var netWorthChangeColor: Color {
-        guard let pct = netWorthChangePct else { return AppTheme.textTertiary }
-        return pct >= 0 ? AppTheme.mint : AppTheme.coral
-    }
-    private var netWorthChangeSub: String {
-        previousNetWorth != nil ? "vs snapshot" : "no snapshot"
-    }
 
+    // Emergency fund
     private var liquidAssets: Double {
         assets.filter { $0.type == .checking || $0.type == .savings }.reduce(0) { $0 + $1.value }
     }
@@ -56,6 +69,7 @@ struct DashboardTabView: View {
     }
     private var emergencyFundMet: Bool { emergencyFundMonths >= 6 }
 
+    // Health score
     private var healthScore: Int {
         var score = 0
         if savingsRate >= 0.20 { score += 35 }
@@ -64,7 +78,6 @@ struct DashboardTabView: View {
         if emergencyFundMet { score += 30 }
         return min(score, 100)
     }
-
     private var healthLabel: String {
         switch healthScore {
         case 80...100: return "Excellent"
@@ -74,13 +87,17 @@ struct DashboardTabView: View {
         }
     }
 
+    // Top assets by value (top 3 for dashboard movers)
+    private var topAssets: [Asset] {
+        assets.sorted { $0.value > $1.value }.prefix(3).map { $0 }
+    }
+
     private var recentExpenses: [ExpenseEntry] {
         allExpenses
             .filter { $0.month == currentMonth && $0.year == currentYear }
             .sorted { $0.createdAt > $1.createdAt }
             .prefix(4).map { $0 }
     }
-
     private var snapshotHistory: [Double] {
         snapshots.sorted { $0.snapshotDate < $1.snapshotDate }.map(\.netWorth)
     }
@@ -91,6 +108,7 @@ struct DashboardTabView: View {
                 greetingHeader
                 heroCard
                 statGrid
+                if !topAssets.isEmpty { topMoversCard }
                 healthCard
                 if !recentExpenses.isEmpty { recentCard }
                 insightCard
@@ -172,7 +190,7 @@ struct DashboardTabView: View {
     private var heroCard: some View {
         VStack(spacing: 18) {
             HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text("NET WORTH")
                         .font(.system(size: 11, weight: .heavy))
                         .tracking(11 * 0.08)
@@ -184,18 +202,20 @@ struct DashboardTabView: View {
                         .contentTransition(.numericText(value: netWorth))
                         .animation(.spring(duration: 0.4), value: netWorth)
 
-                    if let prev = previousNetWorth {
-                        DeltaChip(delta: netWorth - prev)
+                    // Delta chip: shows "↗ +$16,620 · 7.2%" + "this month" label
+                    if let delta = netWorthDelta, let pct = netWorthDeltaPct {
+                        heroDetailChip(delta: delta, pct: pct)
                     }
                 }
                 Spacer()
                 if snapshotHistory.count >= 2 {
                     VStack(alignment: .trailing, spacing: 4) {
-                        Text("12-mo")
-                            .font(.system(size: 10, weight: .semibold))
+                        Text("12-MO")
+                            .font(.system(size: 10, weight: .heavy))
+                            .tracking(10 * 0.06)
                             .foregroundStyle(AppTheme.textTertiary)
                         SparkAreaChart(data: snapshotHistory, color: AppTheme.mint)
-                            .frame(width: 120, height: 48)
+                            .frame(width: 110, height: 52)
                     }
                 }
             }
@@ -241,7 +261,35 @@ struct DashboardTabView: View {
         .darkCard()
     }
 
-    // MARK: - 2x2 stat grid: Income | Savings | Debts | Change
+    // "↗ +$16,620 · 7.2 %  this month"
+    @ViewBuilder
+    private func heroDetailChip(delta: Double, pct: Double) -> some View {
+        let isPositive = delta >= 0
+        let color: Color = isPositive ? AppTheme.mint : AppTheme.coral
+        let icon = isPositive ? "arrow.up.right" : "arrow.down.right"
+        let sign = isPositive ? "+" : ""
+
+        HStack(spacing: 6) {
+            HStack(spacing: 5) {
+                Image(systemName: icon)
+                    .font(.system(size: 11, weight: .bold))
+                Text("\(sign)\(CurrencyFormatter.formatCompact(delta)) · \(String(format: "%+.1f%%", pct * 100))")
+                    .font(.system(size: 12, weight: .semibold))
+                    .monospacedDigit()
+            }
+            .foregroundStyle(color)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(color.opacity(0.12), in: Capsule())
+            .overlay(Capsule().stroke(color.opacity(0.28), lineWidth: 0.5))
+
+            Text("this month")
+                .font(.system(size: 11))
+                .foregroundStyle(AppTheme.textTertiary)
+        }
+    }
+
+    // MARK: - 2x2 stat grid: Income | Expenses | Saved | Cashflow
     private var statGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
             MiniStatWidget(
@@ -252,29 +300,91 @@ struct DashboardTabView: View {
                 accentColor: AppTheme.mint
             )
             MiniStatWidget(
+                icon: "arrow.up.circle",
+                label: "Expenses",
+                value: CurrencyFormatter.formatCompact(monthlyExpenses),
+                sub: "this month",
+                accentColor: AppTheme.coral
+            )
+            MiniStatWidget(
                 icon: "sparkles",
-                label: "Savings",
+                label: "Saved",
                 value: CurrencyFormatter.formatCompact(max(savings, 0)),
                 sub: "\(Int(savingsRate * 100))% rate",
                 accentColor: AppTheme.violet
             )
             MiniStatWidget(
-                icon: "creditcard",
-                label: "Debts",
-                value: CurrencyFormatter.formatCompact(totalLiabilities),
-                sub: "total owed",
-                accentColor: AppTheme.coral,
-                valueColor: totalLiabilities > 0 ? AppTheme.coral : AppTheme.textPrimary
-            )
-            MiniStatWidget(
                 icon: "arrow.up.right",
-                label: "Change",
-                value: netWorthChangeValue,
-                sub: netWorthChangeSub,
-                accentColor: netWorthChangeColor,
-                valueColor: netWorthChangeColor
+                label: "Cashflow",
+                value: cashflowValue,
+                sub: cashflowSub,
+                accentColor: cashflowColor,
+                valueColor: cashflowColor
             )
         }
+    }
+
+    // MARK: - Top movers (top assets by value)
+    private var topMoversCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text("TOP HOLDINGS")
+                    .font(.system(size: 12, weight: .heavy)).tracking(12 * 0.08)
+                    .foregroundStyle(AppTheme.textTertiary)
+                Spacer()
+                Text("by value")
+                    .font(.system(size: 11))
+                    .foregroundStyle(AppTheme.textTertiary)
+            }
+
+            VStack(spacing: 0) {
+                ForEach(Array(topAssets.enumerated()), id: \.element.id) { i, asset in
+                    let idx = AssetType.allCases.firstIndex(of: asset.type) ?? 0
+                    let color = AppTheme.assetColors[idx % AppTheme.assetColors.count]
+                    let pct = totalAssets > 0 ? asset.value / totalAssets * 100 : 0
+
+                    HStack(spacing: 12) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(color.opacity(0.15))
+                                .frame(width: 40, height: 40)
+                            Image(systemName: asset.type.icon)
+                                .font(.system(size: 17, weight: .medium))
+                                .foregroundStyle(color)
+                        }
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(asset.name)
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(AppTheme.textPrimary)
+                                .lineLimit(1)
+                            Text(asset.type.rawValue)
+                                .font(.system(size: 11))
+                                .foregroundStyle(AppTheme.textTertiary)
+                        }
+
+                        Spacer()
+
+                        VStack(alignment: .trailing, spacing: 2) {
+                            Text(CurrencyFormatter.formatCompact(asset.value))
+                                .font(.system(size: 14, weight: .bold)).monospacedDigit()
+                                .foregroundStyle(AppTheme.textPrimary)
+                            Text(String(format: "%.1f%%", pct))
+                                .font(.system(size: 11)).monospacedDigit()
+                                .foregroundStyle(color)
+                        }
+                    }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 12)
+
+                    if i < topAssets.count - 1 {
+                        Divider().background(AppTheme.hairline).padding(.leading, 66)
+                    }
+                }
+            }
+        }
+        .padding(AppTheme.cardPadding)
+        .darkCard()
     }
 
     // MARK: - Financial health card
@@ -303,13 +413,13 @@ struct DashboardTabView: View {
 
                 VStack(alignment: .leading, spacing: 10) {
                     healthPillar(
-                        label: "Savings",
+                        label: "Savings rate",
                         value: "\(Int(savingsRate * 100))%",
                         target: ">20%",
                         met: savingsRate >= 0.20
                     )
                     healthPillar(
-                        label: "Debt ratio",
+                        label: "Debt-to-asset",
                         value: totalAssets > 0 ? "\(Int(min(totalLiabilities / totalAssets, 1) * 100))%" : "—",
                         target: "<40%",
                         met: totalAssets > 0 && totalLiabilities / totalAssets < 0.4
@@ -344,14 +454,13 @@ struct DashboardTabView: View {
                 .font(.system(size: 12))
                 .foregroundStyle(AppTheme.textSecondary)
                 .lineLimit(1)
-                .minimumScaleFactor(0.85)
+                .minimumScaleFactor(0.8)
             Spacer()
             Text(value)
                 .font(.system(size: 12, weight: .bold))
                 .monospacedDigit()
                 .foregroundStyle(AppTheme.textPrimary)
                 .lineLimit(1)
-                .minimumScaleFactor(0.85)
             Text(target)
                 .font(.system(size: 10))
                 .foregroundStyle(AppTheme.textQuaternary)
@@ -403,7 +512,7 @@ struct DashboardTabView: View {
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(AppTheme.textPrimary)
                     .lineLimit(1)
-                Text("\(expense.category.rawValue)")
+                Text(expense.category.rawValue)
                     .font(.system(size: 11))
                     .foregroundStyle(AppTheme.textTertiary)
             }
