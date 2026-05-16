@@ -6,22 +6,6 @@ struct CurrencyTextField: View {
     @State private var text: String = ""
     @FocusState private var isFocused: Bool
 
-    // Filtered binding avoids writing back to text inside onChange (feedback loop on iOS 26)
-    private var filteredBinding: Binding<String> {
-        Binding(
-            get: { text },
-            set: { raw in
-                let filtered = raw.filter { $0.isNumber || $0 == "." }
-                let parts = filtered.components(separatedBy: ".")
-                let clean = parts.count > 2
-                    ? parts[0] + "." + parts[1]
-                    : filtered
-                text = clean
-                value = Double(clean) ?? 0
-            }
-        )
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(label)
@@ -35,11 +19,19 @@ struct CurrencyTextField: View {
                     .font(.system(size: 22, weight: .bold, design: .rounded))
                     .foregroundStyle(isFocused ? AppTheme.mint : AppTheme.textTertiary)
 
-                TextField("0.00", text: filteredBinding)
+                TextField("0.00", text: $text)
                     .keyboardType(.decimalPad)
                     .focused($isFocused)
                     .font(.system(size: 28, weight: .bold, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
+                    .onChange(of: text) { _, newValue in
+                        let filtered = newValue.filter { $0.isNumber || $0 == "." }
+                        let parts = filtered.components(separatedBy: ".")
+                        let clean = parts.count > 2 ? parts[0] + "." + parts[1] : filtered
+                        value = Double(clean) ?? 0
+                        guard clean != newValue else { return }
+                        Task { @MainActor in text = clean }
+                    }
                     .onAppear {
                         if value > 0 { text = String(format: "%.2f", value) }
                     }
