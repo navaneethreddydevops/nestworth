@@ -12,6 +12,24 @@ struct CategoryDetailView: View {
     private var average: Double { expenses.isEmpty ? 0 : total / Double(expenses.count) }
     private var sorted: [ExpenseEntry] { expenses.sorted { $0.createdAt > $1.createdAt } }
 
+    private struct MerchantGroup: Identifiable {
+        let id = UUID()
+        let title: String
+        let amount: Double
+        let count: Int
+    }
+
+    private var merchantGroups: [MerchantGroup] {
+        let grouped = Dictionary(grouping: expenses, by: { $0.title })
+        return grouped.map { key, entries in
+            MerchantGroup(
+                title: key,
+                amount: entries.reduce(0) { $0 + $1.amount },
+                count: entries.count
+            )
+        }.sorted { $0.amount > $1.amount }
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -20,6 +38,7 @@ struct CategoryDetailView: View {
                     VStack(spacing: AppTheme.sectionSpacing) {
                         iconHeader
                         statsRow
+                        if merchantGroups.count > 1 { merchantsCard }
                         if !sorted.isEmpty { transactionList }
                     }
                     .padding(.horizontal, AppTheme.cardPadding)
@@ -89,6 +108,78 @@ struct CategoryDetailView: View {
                 .foregroundStyle(AppTheme.textTertiary)
         }
         .frame(maxWidth: .infinity)
+    }
+
+    // MARK: - Merchant bar chart card
+    private var merchantsCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text("TOP MERCHANTS")
+                    .font(.system(size: 12, weight: .heavy)).tracking(12 * 0.08)
+                    .foregroundStyle(AppTheme.textTertiary)
+                Spacer()
+                Text("\(merchantGroups.count) stores")
+                    .font(.system(size: 11))
+                    .foregroundStyle(AppTheme.textTertiary)
+            }
+
+            let maxAmt = merchantGroups.first?.amount ?? 1
+
+            VStack(spacing: 14) {
+                ForEach(Array(merchantGroups.prefix(5).enumerated()), id: \.element.id) { i, group in
+                    merchantBar(group, maxAmt: maxAmt, rank: i)
+                }
+            }
+        }
+        .padding(AppTheme.cardPadding)
+        .darkCard()
+    }
+
+    @ViewBuilder
+    private func merchantBar(_ group: MerchantGroup, maxAmt: Double, rank: Int) -> some View {
+        VStack(spacing: 6) {
+            HStack(spacing: 10) {
+                ZStack {
+                    Circle()
+                        .fill(rank == 0 ? category.color.opacity(0.18) : AppTheme.surface3)
+                        .frame(width: 30, height: 30)
+                    Image(systemName: category.icon)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(rank == 0 ? category.color : AppTheme.textTertiary)
+                }
+
+                Text(group.title)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(AppTheme.textPrimary)
+                    .lineLimit(1)
+
+                Spacer()
+
+                VStack(alignment: .trailing, spacing: 1) {
+                    Text(CurrencyFormatter.formatCompact(group.amount))
+                        .font(.system(size: 13, weight: .bold)).monospacedDigit()
+                        .foregroundStyle(AppTheme.textPrimary)
+                    if group.count > 1 {
+                        Text("\(group.count) txns")
+                            .font(.system(size: 10))
+                            .foregroundStyle(AppTheme.textTertiary)
+                    }
+                }
+            }
+
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(AppTheme.surface3)
+                        .frame(height: 5)
+                    Capsule()
+                        .fill(category.color.opacity(rank == 0 ? 0.85 : 0.45))
+                        .frame(width: max(0, geo.size.width * CGFloat(group.amount / maxAmt)), height: 5)
+                        .animation(.spring(duration: 0.5, bounce: 0.2), value: group.amount)
+                }
+            }
+            .frame(height: 5)
+        }
     }
 
     // MARK: - Transaction list
